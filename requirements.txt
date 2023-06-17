@@ -1,0 +1,7 @@
+tensorflow
+
+opencv-python
+numpy
+
+PySide6
+pyqt6-tools

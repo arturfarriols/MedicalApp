@@ -143,3 +143,9 @@ class MainFunctions():
         self.group.addAnimation(self.left_box)
         self.group.addAnimation(self.right_box)
         self.group.start()
+
+    def open_file_browser(self):
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)", options=options)
+        if file_name:
+            print("Selected file:", file_name)

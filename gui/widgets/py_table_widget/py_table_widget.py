@@ -58,6 +58,9 @@ class PyTableWidget(QTableWidget):
             context_color
         )
 
+        #SET ATTRIBUTES
+        self.items = {}
+
     # SET STYLESHEET
     def set_stylesheet(
         self,
@@ -88,3 +91,11 @@ class PyTableWidget(QTableWidget):
             _context_color = context_color
         )
         self.setStyleSheet(style_format)
+
+    def add_item(self, item):
+        current_row = self.rowCount()
+        print(self.rowCount())
+        self.items[current_row] = item
+
+    def remove_item(self, row):
+        del self.items[row]

@@ -45,6 +45,7 @@ from . py_credits_bar import PyCredits
 # PY PUSH BUTTON
 # ///////////////////////////////////////////////////////////////
 from . py_push_button import PyPushButton
+from . py_push_button import PyTablePushButton
 
 # PY TOGGLE
 # ///////////////////////////////////////////////////////////////
@@ -69,3 +70,5 @@ from . py_line_edit import PyLineEdit
 # PY TABLE WIDGET
 # ///////////////////////////////////////////////////////////////
 from . py_table_widget import PyTableWidget
+
+from . py_message_box import PyMessageBox

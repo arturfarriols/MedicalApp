@@ -17,3 +17,4 @@
 # PY PUSH BUTTON
 # ///////////////////////////////////////////////////////////////
 from . py_push_button import PyPushButton
+from . py_table_push_button import PyTablePushButton

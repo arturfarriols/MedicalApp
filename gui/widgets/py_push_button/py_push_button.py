@@ -28,6 +28,7 @@ QPushButton {{
     color: {_color};
 	border-radius: {_radius};	
 	background-color: {_bg_color};
+    text-align: {_text_align};
 }}
 QPushButton:hover {{
 	background-color: {_bg_color_hover};
@@ -35,6 +36,7 @@ QPushButton:hover {{
 QPushButton:pressed {{	
 	background-color: {_bg_color_pressed};
 }}
+
 '''
 
 # PY PUSH BUTTON
@@ -48,6 +50,8 @@ class PyPushButton(QPushButton):
         bg_color,
         bg_color_hover,
         bg_color_pressed,
+        text_align = "center",
+        id = None,
         parent = None,
     ):
         super().__init__()
@@ -64,8 +68,18 @@ class PyPushButton(QPushButton):
             _radius = radius,
             _bg_color = bg_color,
             _bg_color_hover = bg_color_hover,
-            _bg_color_pressed = bg_color_pressed
+            _bg_color_pressed = bg_color_pressed,
+            _text_align = text_align,
         )
+        self.setStyleSheet(custom_style)
+
+        # Set id
+        self.id = id
+
+    def get_style_sheet(self):
+        return self.styleSheet()
+    
+    def set_style_sheet(self, custom_style):
         self.setStyleSheet(custom_style)
 
         

@@ -52,20 +52,20 @@
         <number>5</number>
        </property>
        <item>
-        <widget class="QWidget" name="btn_1_widget" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>40</height>
-          </size>
-         </property>
+        <widget class="QFrame" name="frame_btn_2">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
            <height>40</height>
           </size>
          </property>
-         <layout class="QVBoxLayout" name="btn_1_layout">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="btn_1_layout">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -85,22 +85,25 @@
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="btn_2_widget" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>40</height>
-          </size>
-         </property>
+        <widget class="QFrame" name="frame_btn_1">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
            <height>40</height>
           </size>
          </property>
-         <layout class="QVBoxLayout" name="btn_2_layout">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QHBoxLayout" name="btn_2_layout">
           <property name="spacing">
            <number>0</number>
+          </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
           </property>
           <property name="leftMargin">
            <number>0</number>
@@ -118,36 +121,16 @@
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="btn_3_widget" native="true">
+        <widget class="QPushButton" name="pushButton">
          <property name="minimumSize">
           <size>
            <width>0</width>
            <height>40</height>
           </size>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>40</height>
-          </size>
+         <property name="text">
+          <string>PushButton</string>
          </property>
-         <layout class="QVBoxLayout" name="btn_3_layout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-         </layout>
         </widget>
        </item>
        <item>
@@ -188,39 +171,6 @@
         <number>5</number>
        </property>
        <item>
-        <widget class="QWidget" name="btn_4_widget" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>40</height>
-          </size>
-         </property>
-         <layout class="QVBoxLayout" name="btn_4_layout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QLabel" name="label_2">
          <property name="font">
           <font>
@@ -235,28 +185,6 @@
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_3">
-         <property name="font">
-          <font>
-           <pointsize>9</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">font-size: 9pt</string>
-         </property>
-         <property name="text">
-          <string>This is just an example menu.
-Add Qt Widgets or your custom widgets here.</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
