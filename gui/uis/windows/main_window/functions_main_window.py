@@ -149,3 +149,18 @@ class MainFunctions():
         file_name, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)", options=options)
         if file_name:
             print("Selected file:", file_name)
+
+    def clear_analysis_tab(self):
+        while self.ui.load_pages.percentage_layout.count():
+            item = self.ui.load_pages.percentage_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+                del widget
+
+        while self.ui.load_pages.results_table_layout.count():
+            item = self.ui.load_pages.results_table_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+                del widget

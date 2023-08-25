@@ -1,14 +1,22 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_pagesvtyuWk.ui'
+## Form generated from reading UI file 'main_pageswFcrrS.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from qt_core import *
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QSizePolicy,
+    QStackedWidget, QVBoxLayout, QWidget)
 
 class Ui_MainPages(object):
     def setupUi(self, MainPages):
@@ -40,6 +48,9 @@ class Ui_MainPages(object):
         self.frame = QFrame(self.page_2)
         self.frame.setObjectName(u"frame")
         self.frame.setMaximumSize(QSize(16777215, 100))
+        font = QFont()
+        font.setFamilies([u"Segoe UI"])
+        self.frame.setFont(font)
         self.frame.setFrameShape(QFrame.NoFrame)
         self.frame.setFrameShadow(QFrame.Raised)
         self.file_browser_layout = QHBoxLayout(self.frame)
@@ -83,14 +94,57 @@ class Ui_MainPages(object):
 "}")
         self.page_3_layout = QVBoxLayout(self.page_3)
         self.page_3_layout.setObjectName(u"page_3_layout")
-        self.empty_page_label = QLabel(self.page_3)
-        self.empty_page_label.setObjectName(u"empty_page_label")
-        font = QFont()
-        font.setPointSize(16)
-        self.empty_page_label.setFont(font)
-        self.empty_page_label.setAlignment(Qt.AlignCenter)
+        self.page_3_pages = QStackedWidget(self.page_3)
+        self.page_3_pages.setObjectName(u"page_3_pages")
+        self.no_videos_page = QWidget()
+        self.no_videos_page.setObjectName(u"no_videos_page")
+        self.horizontalLayout = QHBoxLayout(self.no_videos_page)
+        self.horizontalLayout.setSpacing(0)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.frame_4 = QFrame(self.no_videos_page)
+        self.frame_4.setObjectName(u"frame_4")
+        self.frame_4.setFrameShape(QFrame.StyledPanel)
+        self.frame_4.setFrameShadow(QFrame.Raised)
+        self.no_videos_layout = QVBoxLayout(self.frame_4)
+        self.no_videos_layout.setObjectName(u"no_videos_layout")
+        self.no_videos_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.page_3_layout.addWidget(self.empty_page_label)
+        self.horizontalLayout.addWidget(self.frame_4)
+
+        self.page_3_pages.addWidget(self.no_videos_page)
+        self.videos_page = QWidget()
+        self.videos_page.setObjectName(u"videos_page")
+        self.verticalLayout = QVBoxLayout(self.videos_page)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.frame_5 = QFrame(self.videos_page)
+        self.frame_5.setObjectName(u"frame_5")
+        self.frame_5.setMaximumSize(QSize(16777215, 200))
+        self.frame_5.setFrameShape(QFrame.StyledPanel)
+        self.frame_5.setFrameShadow(QFrame.Raised)
+        self.percentage_layout = QHBoxLayout(self.frame_5)
+        self.percentage_layout.setSpacing(0)
+        self.percentage_layout.setObjectName(u"percentage_layout")
+        self.percentage_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout.addWidget(self.frame_5)
+
+        self.frame_6 = QFrame(self.videos_page)
+        self.frame_6.setObjectName(u"frame_6")
+        self.frame_6.setFrameShape(QFrame.StyledPanel)
+        self.frame_6.setFrameShadow(QFrame.Raised)
+        self.results_table_layout = QHBoxLayout(self.frame_6)
+        self.results_table_layout.setSpacing(0)
+        self.results_table_layout.setObjectName(u"results_table_layout")
+        self.results_table_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout.addWidget(self.frame_6)
+
+        self.page_3_pages.addWidget(self.videos_page)
+
+        self.page_3_layout.addWidget(self.page_3_pages)
 
         self.pages.addWidget(self.page_3)
 
@@ -99,7 +153,8 @@ class Ui_MainPages(object):
 
         self.retranslateUi(MainPages)
 
-        self.pages.setCurrentIndex(1)
+        self.pages.setCurrentIndex(2)
+        self.page_3_pages.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainPages)
@@ -107,6 +162,5 @@ class Ui_MainPages(object):
 
     def retranslateUi(self, MainPages):
         MainPages.setWindowTitle(QCoreApplication.translate("MainPages", u"Form", None))
-        self.empty_page_label.setText(QCoreApplication.translate("MainPages", u"Empty Page", None))
     # retranslateUi
 

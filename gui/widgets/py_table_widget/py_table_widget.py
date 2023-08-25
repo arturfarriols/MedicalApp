@@ -59,7 +59,7 @@ class PyTableWidget(QTableWidget):
         )
 
         #SET ATTRIBUTES
-        self.items = {}
+        self.items = []
 
     # SET STYLESHEET
     def set_stylesheet(
@@ -93,9 +93,8 @@ class PyTableWidget(QTableWidget):
         self.setStyleSheet(style_format)
 
     def add_item(self, item):
-        current_row = self.rowCount()
-        print(self.rowCount())
-        self.items[current_row] = item
+        self.items.append(item)
 
     def remove_item(self, row):
-        del self.items[row]
+        print(self.rowCount(), row, len(self.items))
+        self.items.pop(row)

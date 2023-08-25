@@ -338,22 +338,7 @@ class SetupMainWindow:
         self.btn_3.setObjectName("btn_3")
         self.btn_3.setMinimumWidth(200)
         self.btn_3.setMaximumWidth(200)
-        # self.icon_2 = QIcon(Functions.set_svg_icon("icon_folder_open.svg"))
-        # self.btn_3.setIcon(self.icon_2)
-
-        # self.btn_3.clicked.connect(lambda: self.button_clicked(self.btn_3.id))
-
-
-        # # Set resizing behavior for all columns
-        # self.table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
-
-        # # Set width for the first column
-        # self.table_widget.setColumnWidth(0, first_column_width)
-
-        # # Set width for the second and third columns
-        # self.table_widget.setColumnWidth(1, half_remaining_width)
-        # self.table_widget.setColumnWidth(2, half_remaining_width)
-
+        self.btn_3.clicked.connect(lambda: self.button_clicked(self.btn_3.id, [self.table_widget]))
 
         # CREATE CUSTOM TOGGLE BUTTON
         self.toggle_1 = PyToggle(
@@ -363,6 +348,8 @@ class SetupMainWindow:
             width = 50
         )
 
+        self.label_1 = PyLabel("No videos to process", "black", "Segoe UI", 24)
+
         # ADD TO LAYOUT
         self.ui.left_column.menus.btn_1_layout.addWidget(self.btn_1)
         self.ui.left_column.menus.btn_2_layout.addWidget(self.toggle_1, Qt.AlignCenter, Qt.AlignCenter)
@@ -370,6 +357,7 @@ class SetupMainWindow:
         self.ui.load_pages.file_browser_layout.addWidget(self.btn_2,  Qt.AlignCenter, Qt.AlignRight)
         self.ui.load_pages.table_layout.addWidget(self.table_widget)
         self.ui.load_pages.analysis_btn_layout.addWidget(self.btn_3, Qt.AlignCenter, Qt.AlignCenter)
+        self.ui.load_pages.no_videos_layout.addWidget(self.label_1, Qt.AlignCenter, Qt.AlignCenter)
 
         self.logo = QSvgWidget(Functions.set_svg_image("logo_home.svg"))
 
@@ -391,3 +379,153 @@ class SetupMainWindow:
             self.top_right_grip.setGeometry(self.width() - 20, 5, 15, 15)
             self.bottom_left_grip.setGeometry(5, self.height() - 20, 15, 15)
             self.bottom_right_grip.setGeometry(self.width() - 20, self.height() - 20, 15, 15)
+
+    def set_analysis_tab(self):
+        MainFunctions.clear_analysis_tab(self)
+
+        # CREATE CUSTOM BUTTON 2
+        self.btn_cancel = PyPushButton(
+            text = "Cancel analysis",
+            radius = 8,
+            color = self.themes["app_color"]["text_foreground"],
+            bg_color = self.themes["app_color"]["dark_one"],
+            bg_color_hover = self.themes["app_color"]["dark_three"],
+            bg_color_pressed = self.themes["app_color"]["dark_four"],
+            text_align = "center",
+            id = "cancel_btn"
+        )
+
+        self.btn_cancel.setMinimumHeight(40)
+        self.btn_cancel.setObjectName("cancel_btn")
+        self.btn_cancel.setMinimumWidth(200)
+        self.btn_cancel.setMaximumWidth(200)
+        self.btn_cancel.clicked.connect(lambda: self.button_clicked(self.btn_cancel.id))
+
+        row_count = self.table_widget.rowCount()
+        print("row_count is: ", row_count)
+
+        # TABLE WIDGETS
+        self.results_table = PyTableWidget(
+            radius = 8,
+            color = self.themes["app_color"]["text_foreground"],
+            selection_color = self.themes["app_color"]["context_color"],
+            bg_color = self.themes["app_color"]["bg_two"],
+            header_horizontal_color = self.themes["app_color"]["dark_two"],
+            header_vertical_color = self.themes["app_color"]["bg_three"],
+            bottom_line_color = self.themes["app_color"]["bg_three"],
+            grid_line_color = self.themes["app_color"]["bg_one"],
+            scroll_bar_bg_color = self.themes["app_color"]["bg_one"],
+            scroll_bar_btn_color = self.themes["app_color"]["dark_four"],
+            context_color = self.themes["app_color"]["context_color"]
+        )
+        self.results_table.setColumnCount(10)
+        # self.table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.results_table.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.results_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+        # Columns / Header
+        self.column_6 = QTableWidgetItem()
+        self.column_6.setTextAlignment(Qt.AlignCenter)
+        self.column_6.setText("File name")
+
+        self.column_7 = QTableWidgetItem()
+        self.column_7.setTextAlignment(Qt.AlignCenter)
+        self.column_7.setText("IVS")
+
+        self.column_8 = QTableWidgetItem()
+        self.column_8.setTextAlignment(Qt.AlignCenter)
+        self.column_8.setText("LVID")
+
+        self.column_9 = QTableWidgetItem()
+        self.column_9.setTextAlignment(Qt.AlignCenter)
+        self.column_9.setText("LVPW")
+
+        self.column_10 = QTableWidgetItem()
+        self.column_10.setTextAlignment(Qt.AlignCenter)
+        self.column_10.setText("LVESV")
+
+        self.column_11 = QTableWidgetItem()
+        self.column_11.setTextAlignment(Qt.AlignCenter)
+        self.column_11.setText("LVEDV")
+
+        self.column_12 = QTableWidgetItem()
+        self.column_12.setTextAlignment(Qt.AlignCenter)
+        self.column_12.setText("FS")
+
+        self.column_13 = QTableWidgetItem()
+        self.column_13.setTextAlignment(Qt.AlignCenter)
+        self.column_13.setText("EF")
+
+        self.column_14 = QTableWidgetItem()
+        self.column_14.setTextAlignment(Qt.AlignCenter)
+        self.column_14.setText("LV")
+
+        self.column_15 = QTableWidgetItem()
+        self.column_15.setTextAlignment(Qt.AlignCenter)
+        self.column_15.setText("SV")
+
+        self.column_16 = QTableWidgetItem()
+        self.column_16.setTextAlignment(Qt.AlignCenter)
+        self.column_16.setText("CO")
+
+        # Set column
+        self.results_table.setHorizontalHeaderItem(0, self.column_6)
+        self.results_table.setHorizontalHeaderItem(1, self.column_7)
+        self.results_table.setHorizontalHeaderItem(2, self.column_8)
+        self.results_table.setHorizontalHeaderItem(3, self.column_9)
+        self.results_table.setHorizontalHeaderItem(4, self.column_10)
+        self.results_table.setHorizontalHeaderItem(5, self.column_11)
+        self.results_table.setHorizontalHeaderItem(6, self.column_12)
+        self.results_table.setHorizontalHeaderItem(7, self.column_13)
+        self.results_table.setHorizontalHeaderItem(8, self.column_14)
+        self.results_table.setHorizontalHeaderItem(9, self.column_15)
+
+
+        # Set the width of a specific column
+        # target_column = 0
+        # target_width = 400
+        # table_widget.setColumnWidth(target_column, target_width)
+
+        # # Set the horizontal header resize mode to stretch
+        # header = table_widget.horizontalHeader()
+        # header.setSectionResizeMode(QHeaderView.Stretch)
+        self.results_table.setColumnWidth(0, 340)
+        self.results_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        self.results_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.Stretch)  
+        self.results_table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(8, QHeaderView.ResizeMode.Stretch)  
+        self.results_table.horizontalHeader().setSectionResizeMode(9, QHeaderView.ResizeMode.Stretch)
+
+        self.results_table.setRowCount(row_count)
+
+        for i in range(row_count):
+            text = self.table_widget.item(i, 0).text()
+            self.results_table.setItem(i, 0, QTableWidgetItem(text))
+
+
+        # CIRCULAR PROGRESS 2
+        self.circular_progress = PyCircularProgress(
+            value = 0,
+            progress_width = 8,
+            progress_color = self.themes["app_color"]["context_color"],
+            text_color = self.themes["app_color"]["context_color"],
+            font_size = 14,
+            bg_color = self.themes["app_color"]["bg_three"]
+        )
+        self.circular_progress.setFixedSize(160,160)
+
+
+        self.ui.load_pages.percentage_layout.addWidget(self.circular_progress,  Qt.AlignCenter, Qt.AlignCenter)
+        self.ui.load_pages.percentage_layout.addWidget(self.btn_cancel,  Qt.AlignCenter, Qt.AlignRight)
+        self.ui.load_pages.results_table_layout.addWidget(self.results_table)
+
+    def actualize_percentage(self, percentage):
+        self.circular_progress.set_value(percentage)
+
+    def actualize_results_table(self, processed_results, video):
+        add_result(self, processed_results, video)

@@ -17,6 +17,8 @@ from models import *
 
 time_file = "mean_time.txt"
 
+actual_row = 1
+
 def convert_frame_to_pixmap(frame, dimensions = None):
     image = QImage(frame.data, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
     pixmap = QPixmap.fromImage(image)
@@ -60,3 +62,10 @@ def convert_seconds_to_hms(seconds):
     minutes = (seconds % 3600) // 60
     seconds = seconds % 60
     return hours, minutes, seconds
+
+def change_button_selection(deactivated_btn, activated_btn):
+    deactivated_btn.set_active(False)
+    activated_btn.set_active(True)
+
+# def generate_table_columns(window, texts):
+#     for text in texts:

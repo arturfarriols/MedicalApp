@@ -1,0 +1,1 @@
+from .py_image_widget import ImageWidget

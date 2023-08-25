@@ -20,6 +20,8 @@ import sys
 import os
 from functools import partial
 
+import numpy as np
+
 # IMPORT QT CORE
 # ///////////////////////////////////////////////////////////////
 from qt_core import *
@@ -28,7 +30,10 @@ from qt_core import *
 # ///////////////////////////////////////////////////////////////
 from . ui_main import *
 
+from gui.uis.windows.main_window.functions_main_window import *
+
 from gui.widgets import *
+from gui.uis.windows.image_dialog import *
 
 from gui.uis.utils import *
 
@@ -68,10 +73,7 @@ def open_file_browser(window):
                 btn_bg_color_pressed = "#D0D0D0",
                 id = "warning pop up"
             )
-            # message_box = QMessageBox()
-            # message_box.setIcon(QMessageBox.Warning)
-            # message_box.setWindowTitle("Invalid File Format")
-            # message_box.setText("The selected file format is not valid.")
+
             message_box.exec_()
             return None
         else:
@@ -127,46 +129,14 @@ def _generate_closing_button(window, row):
     return btn    
 
 def add_row(window, file_path):
-    # file_name = os.path.basename(file_path)
-    # video = Video(None, file_path)
+    #OBTAIN THE FILE NAME
+    file_name = os.path.basename(file_path)
 
-    # status, frame = video.get_first_frame()
-    # image = QImage(frame.data, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
-
-    # # Create a QPixmap from the QImage
-    # pixmap = QPixmap.fromImage(image)
-    # # Scale the image to fit the width and height of the table cell
-    # cell_width = table.columnWidth(1)  # Width of the first column
-    # cell_height = 50  # Height of the new row
-    # scaled_pixmap = pixmap.scaled(cell_width, cell_height, Qt.KeepAspectRatio)
-
-    # frame_item = QTableWidgetItem()
-    # frame_item.setData(Qt.DecorationRole, scaled_pixmap)  # Load the image
-    # frame_item.setTextAlignment(Qt.AlignCenter)  # Center the image vertically
-
-    # print(type(frame))
-
-
-    # row_number = table.rowCount()
-    # table.insertRow(row_number)
-    # table.setItem(row_number, 0, QTableWidgetItem(file_name)) # Add nick
-    # # table.cellWidget(row_number, 0).setPixmap(scaled_pixmap)
-    # # table.setItem(row_number, 1, QTableWidgetItem(""))  # Add an empty item for the second column
-    # table.setItem(row_number, 1, frame_item) # Add nick
-    # pass_text = QTableWidgetItem()
-    # pass_text.setTextAlignment(Qt.AlignCenter)
-    # pass_text.setText("12345" + "12")
-    # table.setItem(row_number, 2, pass_text) # Add pass
-    # table.setRowHeight(row_number, 50)
-
-    video = Video(None, file_path)
+    video = Video(file_name, file_path)
     #INSERT ROW
     row_number = window.table_widget.rowCount()
     window.table_widget.insertRow(row_number)
     
-    #OBTAIN THE FILE NAME
-    file_name = os.path.basename(file_path)
-
     #OBTAIN ETA
     number_of_frames = video.get_number_of_frames()
     eta = obtain_ETA(number_of_frames)
@@ -197,12 +167,8 @@ def add_row(window, file_path):
     window.table_widget.setCellWidget(row_number, 3, image_widget)
     window.table_widget.setCellWidget(row_number, 4, btn_widget) 
 
-    # pass_text = QTableWidgetItem()
-    # pass_text.setTextAlignment(Qt.AlignCenter)
-    # pass_text.setText("12345" + "12")
-    # window.table_widget.setItem(row_number, 2, pass_text)  # Add pass
-
     window.table_widget.setRowHeight(row_number, cell_height)
+    window.table_widget.add_item(video)
 
 
 def delete_row(btn_table, table_widget):
@@ -210,17 +176,100 @@ def delete_row(btn_table, table_widget):
     row_number = table_widget.rowCount()
 
     if row is not None:
+        table_widget.remove_item(row)
         for i in range(row + 1, row_number):
-            table_widget.cellWidget(i, 2).findChildren(PyTablePushButton)[0].set_row(i - 1)
+            table_widget.cellWidget(i, 4).findChildren(PyTablePushButton)[0].set_row(i - 1)
         table_widget.removeRow(row)
 
-    # if isinstance(sender, QPushButton):
-    #     btn_row = sender.get_row()  # Get the row number stored in the button
-    #     if btn_row is not None:
-    #         window.table_widget.removeRow(btn_row)  # Remove the row from the table
-    #         # Update the row numbers of the remaining buttons
-    #         for row in range(window.table_widget.rowCount()):
-    #             btn_widget = window.table_widget.cellWidget(row, 2)
-    #             if isinstance(btn_widget, PyTablePushButton):
-    #                 btn_widget.set_row(row)
+def add_result(window, processed_results, video):
+    name = os.path.basename(video.path)
+    row_count = window.results_table.rowCount()
+    column_count = window.results_table.columnCount()
     
+    for row in range(row_count):
+        file_name = window.results_table.item(row, 0).text()
+        if file_name == name:
+            for i, result in enumerate(processed_results):
+                result_item = QTableWidgetItem(str(result))
+                result_item.setTextAlignment(Qt.AlignCenter)
+                window.results_table.setItem(row, i + 1, result_item)
+            break
+    
+def display_cropped_frames(window):
+    number_of_rows = window.table_widget.rowCount()
+    if number_of_rows == 0:
+        # CREATE CUSTOM BUTTON 2
+        message_box = PyMessageBox(
+            text = "There is no video to analyze.",
+            title = "Any video chosen",
+            icon = QMessageBox.Warning, 
+            color = "#333333",
+            radius = 0,
+            msg_bg_color = "#F0F0F0",
+            btn_bg_color = "#F8F8F8",
+            btn_bg_color_hover = "#E8E8E8",
+            btn_bg_color_pressed = "#D0D0D0",
+            id = "warning pop up"
+        )
+
+        message_box.exec_()
+        return "There is no video to analyze."
+
+    points = {}
+    for video in window.table_widget.items:
+        status, frames = video.get_cropped_frames()
+        if status != "Ok":
+            message_box = PyMessageBox(
+                text = status,
+                title = "Error loading the video",
+                icon = QMessageBox.Warning, 
+                color = "#333333",
+                radius = 0,
+                msg_bg_color = "#F0F0F0",
+                btn_bg_color = "#F8F8F8",
+                btn_bg_color_hover = "#E8E8E8",
+                btn_bg_color_pressed = "#D0D0D0",
+                id = "warning pop up"
+            )
+            message_box.exec_()
+            return status
+        else:
+            is_automatic, point = open_analysis_dialog(frames)
+            print(point)
+            video.set_point(is_automatic, point)
+            
+            points[video.id] = point
+
+    MainFunctions.set_page(window, window.ui.load_pages.page_3)
+    window.ui.load_pages.page_3_pages.setCurrentIndex(1)
+    print("this", window.btn_2)
+
+    top_btn_settings = MainFunctions.get_title_bar_btn(window, "btn_top_settings")
+    top_btn_settings.set_active(False)
+    window.ui.left_menu.select_only_one_tab(window.btn_3.objectName())
+
+    # window.ui.left_menu.select_only_one_tab("btn_page_3")
+    btn_page_3 = window.ui.left_menu.findChildren(QPushButton, "btn_page_3")
+    btn_page_2 = window.ui.left_menu.findChildren(QPushButton, "btn_page_2")
+    btn_page_2[0].set_active(False)
+    btn_page_3[0].set_active(True)
+    # self.ui.left_menu.select_only_one(btn.objectName()) 
+    # window.btn_3.set_active(True)
+    # window.show()
+    return "Ok"
+
+    
+def actualize_percentage(window, new_percentage):
+
+    window.circular_progress.set_value(new_percentage)
+    # self.show()                
+        
+
+def open_analysis_dialog(frames):
+    dialog = AnalysisDialog(frames)
+    dialog.exec_()
+    is_automatic = dialog.is_automatic
+    point = dialog.point
+    del dialog
+    
+    return is_automatic, point

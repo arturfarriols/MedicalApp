@@ -38,6 +38,8 @@ from gui.uis.windows.main_window import *
 # ///////////////////////////////////////////////////////////////
 from gui.widgets import *
 
+from models.model_controller import *
+
 # ADJUST QT FONT DPI FOR HIGHT SCALE AN 4K MONITOR
 # ///////////////////////////////////////////////////////////////
 os.environ["QT_FONT_DPI"] = "96"
@@ -64,6 +66,8 @@ class MainWindow(QMainWindow):
         # ///////////////////////////////////////////////////////////////
         self.hide_grips = True # Show/Hide resize grips
         SetupMainWindow.setup_gui(self)
+
+        self.model_controller = ModelController(self)
 
         # SHOW MAIN WINDOW
         # ///////////////////////////////////////////////////////////////
@@ -223,14 +227,58 @@ class MainWindow(QMainWindow):
         print(f"Button {btn.objectName()}, clicked!")
 
     @Slot(str)
-    def button_clicked(self, button_id):
+    def button_clicked(self, button_id, widgets = []):
         if button_id == "browse_files_btn":
             print("""Button "browse_files_btn" was clicked""")
             result = open_file_browser(self)
-        if button_id == 2:
-            print("Button 2 was clicked")
+
+        if button_id == "analysis_btn":
+            if self.model_controller.processing_videos == False:
+                print("analysis_btn was clicked")
+                status = display_cropped_frames(self)
+                if status == "Ok":
+                    SetupMainWindow.set_analysis_tab(self)
+                    self.model_controller.initiate_models()
+                    # print("items", widgets[0].items[0].id)
+                    self.model_controller.initialize_thread_processing(widgets[0].items)
+                # print(self.model_controller.lower_segmentation_model.model.summary())
+                # self.model_controller.button1_clicked
+                # print(row_count)
+                result = None
+            else:
+                # CREATE CUSTOM BUTTON 2
+                message_box = PyMessageBox(
+                    text = "Wait until the videos are analyzed or cancel the analysis.",
+                    title = "Current analysis has not finished",
+                    icon = QMessageBox.Warning, 
+                    color = "#333333",
+                    radius = 0,
+                    msg_bg_color = "#F0F0F0",
+                    btn_bg_color = "#F8F8F8",
+                    btn_bg_color_hover = "#E8E8E8",
+                    btn_bg_color_pressed = "#D0D0D0",
+                    id = "warning pop up"
+                )
+
+                message_box.exec_()
+                result = None
+        
+        if button_id == "cancel_btn":
+            print("cancel_btn was clicked")
+            self.model_controller.processing_videos = False
+            if self.model_controller.thread is not None:
+                print('STOPPING EXECUTION')
+                self.model_controller.thread.stop_execution()
+
+            result = None
 
         return result
+    
+    def actualize_percentage(self, percentage):
+        SetupMainWindow.actualize_percentage(self, percentage)
+
+    def actualize_results_table(self, processed_results, video):
+        SetupMainWindow.actualize_results_table(self, processed_results, video)
 
     # LEFT MENU BTN IS RELEASED
     # Run function when btn is released
@@ -267,4 +315,4 @@ if __name__ == "__main__":
 
     # EXEC APP
     # ///////////////////////////////////////////////////////////////
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
