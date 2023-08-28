@@ -1,9 +1,9 @@
 {
-    "app_name": "PyOneDark - Modern GUI",
+    "app_name": "Echography Analisis App",
     "version" : "v1.0.0",
-    "copyright" : "By: Wanderson M. Pimenta",
-    "year" : 2021,
-    "theme_name" : "default",
+    "copyright" : " ",
+    "year" : 2023,
+    "theme_name" : "dracula",
     "custom_title_bar": true,
     "startup_size": [
         1400,

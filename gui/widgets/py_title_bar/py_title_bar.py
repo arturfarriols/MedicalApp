@@ -129,7 +129,7 @@ class PyTitleBar(QWidget):
             self.top_logo.mouseMoveEvent = moveWindow
             self.div_1.mouseMoveEvent = moveWindow
             self.title_label.mouseMoveEvent = moveWindow
-            self.div_2.mouseMoveEvent = moveWindow
+            # self.div_2.mouseMoveEvent = moveWindow
             self.div_3.mouseMoveEvent = moveWindow
 
         # MAXIMIZE / RESTORE
@@ -137,14 +137,14 @@ class PyTitleBar(QWidget):
             self.top_logo.mouseDoubleClickEvent = self.maximize_restore
             self.div_1.mouseDoubleClickEvent = self.maximize_restore
             self.title_label.mouseDoubleClickEvent = self.maximize_restore
-            self.div_2.mouseDoubleClickEvent = self.maximize_restore
+            # self.div_2.mouseDoubleClickEvent = self.maximize_restore
 
         # ADD WIDGETS TO TITLE BAR
         # ///////////////////////////////////////////////////////////////
         self.bg_layout.addWidget(self.top_logo)
         self.bg_layout.addWidget(self.div_1)
         self.bg_layout.addWidget(self.title_label)
-        self.bg_layout.addWidget(self.div_2)
+        # self.bg_layout.addWidget(self.div_2)
 
         # ADD BUTTONS BUTTONS
         # ///////////////////////////////////////////////////////////////
@@ -167,35 +167,35 @@ class PyTitleBar(QWidget):
     # ///////////////////////////////////////////////////////////////
     def add_menus(self, parameters):
         if parameters != None and len(parameters) > 0:
-            for parameter in parameters:
-                _btn_icon = Functions.set_svg_icon(parameter['btn_icon'])
-                _btn_id = parameter['btn_id']
-                _btn_tooltip = parameter['btn_tooltip']
-                _is_active = parameter['is_active']
+            # for parameter in parameters:
+            #     _btn_icon = Functions.set_svg_icon(parameter['btn_icon'])
+            #     _btn_id = parameter['btn_id']
+            #     _btn_tooltip = parameter['btn_tooltip']
+            #     _is_active = parameter['is_active']
 
-                self.menu = PyTitleButton(
-                    self._parent,
-                    self._app_parent,
-                    btn_id = _btn_id,
-                    tooltip_text = _btn_tooltip,
-                    dark_one = self._dark_one,
-                    bg_color = self._bg_color,
-                    bg_color_hover = self._btn_bg_color_hover,
-                    bg_color_pressed = self._btn_bg_color_pressed,
-                    icon_color = self._icon_color,
-                    icon_color_hover = self._icon_color_active,
-                    icon_color_pressed = self._icon_color_pressed,
-                    icon_color_active = self._icon_color_active,
-                    context_color = self._context_color,
-                    text_foreground = self._text_foreground,
-                    icon_path = _btn_icon,
-                    is_active = _is_active
-                )
-                self.menu.clicked.connect(self.btn_clicked)
-                self.menu.released.connect(self.btn_released)
+                # self.menu = PyTitleButton(
+                #     self._parent,
+                #     self._app_parent,
+                #     btn_id = _btn_id,
+                #     tooltip_text = _btn_tooltip,
+                #     dark_one = self._dark_one,
+                #     bg_color = self._bg_color,
+                #     bg_color_hover = self._btn_bg_color_hover,
+                #     bg_color_pressed = self._btn_bg_color_pressed,
+                #     icon_color = self._icon_color,
+                #     icon_color_hover = self._icon_color_active,
+                #     icon_color_pressed = self._icon_color_pressed,
+                #     icon_color_active = self._icon_color_active,
+                #     context_color = self._context_color,
+                #     text_foreground = self._text_foreground,
+                #     icon_path = _btn_icon,
+                #     is_active = _is_active
+                # )
+                # self.menu.clicked.connect(self.btn_clicked)
+                # self.menu.released.connect(self.btn_released)
 
-                # ADD TO LAYOUT
-                self.custom_buttons_layout.addWidget(self.menu)
+                # # ADD TO LAYOUT
+                # self.custom_buttons_layout.addWidget(self.menu)
 
             # ADD DIV
             if self._is_custom_title_bar:
@@ -264,7 +264,7 @@ class PyTitleBar(QWidget):
 
         # DIVS
         self.div_1 = PyDiv(self._div_color)
-        self.div_2 = PyDiv(self._div_color)
+        # self.div_2 = PyDiv(self._div_color)
         self.div_3 = PyDiv(self._div_color)
 
         # LEFT FRAME WITH MOVE APP
@@ -289,7 +289,7 @@ class PyTitleBar(QWidget):
         self.minimize_button = PyTitleButton(
             self._parent,
             self._app_parent,
-            tooltip_text = "Close app",
+            tooltip_text = "Minimize app",
             dark_one = self._dark_one,
             bg_color = self._btn_bg_color,
             bg_color_hover = self._btn_bg_color_hover,

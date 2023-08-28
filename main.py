@@ -118,7 +118,7 @@ class MainWindow(QMainWindow):
         # PAGE SETTINGS
         if btn.objectName() == "btn_settings" or btn.objectName() == "btn_close_left_column":
             #Deselect title bar buttons
-            top_btn_settings.set_active(False)
+            # top_btn_settings.set_active(False)
 
             # Check if Left column is visible
             if not MainFunctions.left_column_is_visible(self):
@@ -139,7 +139,7 @@ class MainWindow(QMainWindow):
         # PAGE MENU 2
         if btn.objectName() == "btn_menu_2" or btn.objectName() == "btn_close_left_column":
             #Deselect title bar buttons
-            top_btn_settings.set_active(False)
+            # top_btn_settings.set_active(False)
 
             # Check if Left column is visible
             if not MainFunctions.left_column_is_visible(self):
@@ -310,7 +310,7 @@ if __name__ == "__main__":
     # APPLICATION
     # ///////////////////////////////////////////////////////////////
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("icon.ico"))
+    app.setWindowIcon(QIcon("SP.ico"))
     window = MainWindow()
 
     # EXEC APP

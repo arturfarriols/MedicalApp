@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_pageswFcrrS.ui'
+## Form generated from reading UI file 'main_pagesEHyJZm.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.3
 ##
@@ -32,7 +32,7 @@ class Ui_MainPages(object):
         self.page_1 = QWidget()
         self.page_1.setObjectName(u"page_1")
         self.page_1.setStyleSheet(u"font-size: 14pt;\n"
-"background: lightgreen;")
+"background: #44475a;")
         self.page_1_layout = QVBoxLayout(self.page_1)
         self.page_1_layout.setSpacing(5)
         self.page_1_layout.setObjectName(u"page_1_layout")
@@ -40,14 +40,14 @@ class Ui_MainPages(object):
         self.pages.addWidget(self.page_1)
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
-        self.page_2.setStyleSheet(u"background: orange;")
+        self.page_2.setStyleSheet(u"background: #44475a;")
         self.page_2_layout = QVBoxLayout(self.page_2)
         self.page_2_layout.setSpacing(5)
         self.page_2_layout.setObjectName(u"page_2_layout")
         self.page_2_layout.setContentsMargins(5, 5, 5, 5)
         self.frame = QFrame(self.page_2)
         self.frame.setObjectName(u"frame")
-        self.frame.setMaximumSize(QSize(16777215, 100))
+        self.frame.setMaximumSize(QSize(16777215, 150))
         font = QFont()
         font.setFamilies([u"Segoe UI"])
         self.frame.setFont(font)
@@ -56,7 +56,7 @@ class Ui_MainPages(object):
         self.file_browser_layout = QHBoxLayout(self.frame)
         self.file_browser_layout.setSpacing(0)
         self.file_browser_layout.setObjectName(u"file_browser_layout")
-        self.file_browser_layout.setContentsMargins(0, 0, 0, 0)
+        self.file_browser_layout.setContentsMargins(50, 20, 50, 20)
 
         self.page_2_layout.addWidget(self.frame)
 
@@ -67,7 +67,7 @@ class Ui_MainPages(object):
         self.table_layout = QHBoxLayout(self.frame_2)
         self.table_layout.setSpacing(0)
         self.table_layout.setObjectName(u"table_layout")
-        self.table_layout.setContentsMargins(0, 0, 0, 0)
+        self.table_layout.setContentsMargins(50, 0, 50, 20)
 
         self.page_2_layout.addWidget(self.frame_2)
 
@@ -87,7 +87,7 @@ class Ui_MainPages(object):
         self.pages.addWidget(self.page_2)
         self.page_3 = QWidget()
         self.page_3.setObjectName(u"page_3")
-        self.page_3.setStyleSheet(u"background: lightblue;\n"
+        self.page_3.setStyleSheet(u"background: #44475a;\n"
 "\n"
 "QFrame {\n"
 "	font-size: 16pt;\n"
@@ -154,7 +154,7 @@ class Ui_MainPages(object):
         self.retranslateUi(MainPages)
 
         self.pages.setCurrentIndex(2)
-        self.page_3_pages.setCurrentIndex(1)
+        self.page_3_pages.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainPages)

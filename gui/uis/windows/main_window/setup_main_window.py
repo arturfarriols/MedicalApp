@@ -68,37 +68,37 @@ class SetupMainWindow:
             "is_active" : True
         },
         {
-            "btn_icon" : "icon_file.svg",
+            "btn_icon" : "icon_search.svg",
             "btn_id" : "btn_page_2",
-            "btn_text" : "Open Page 2",
-            "btn_tooltip" : "Open Page 2",
+            "btn_text" : "Video Analyzer",
+            "btn_tooltip" : "Video analyzer page",
             "show_top" : True,
             "is_active" : False
         },
         {
             "btn_icon" : "icon_file.svg",
             "btn_id" : "btn_page_3",
-            "btn_text" : "Open Page 3",
-            "btn_tooltip" : "Open Page 3",
+            "btn_text" : "Results",
+            "btn_tooltip" : "Results page",
             "show_top" : True,
             "is_active" : False
         },
         {
             "btn_icon" : "icon_info.svg",
             "btn_id" : "btn_menu_2",
-            "btn_text" : "Open Menu 2",
-            "btn_tooltip" : "Open menu 2",
+            "btn_text" : "Open Information Menu",
+            "btn_tooltip" : "Open information menu",
             "show_top" : False,
             "is_active" : False
         },
-        {
-            "btn_icon" : "icon_settings.svg",
-            "btn_id" : "btn_settings",
-            "btn_text" : "Open Settings",
-            "btn_tooltip" : "Open settings",
-            "show_top" : False,
-            "is_active" : False
-        }
+        # {
+        #     "btn_icon" : "icon_settings.svg",
+        #     "btn_id" : "btn_settings",
+        #     "btn_text" : "Open Settings",
+        #     "btn_tooltip" : "Open settings",
+        #     "show_top" : False,
+        #     "is_active" : False
+        # }
     ]
 
      # ADD TITLE BAR MENUS
@@ -348,7 +348,7 @@ class SetupMainWindow:
             width = 50
         )
 
-        self.label_1 = PyLabel("No videos to process", "black", "Segoe UI", 24)
+        self.label_1 = PyLabel("Any videos processed", "white", "Segoe UI", 24)
 
         # ADD TO LAYOUT
         self.ui.left_column.menus.btn_1_layout.addWidget(self.btn_1)
@@ -359,7 +359,8 @@ class SetupMainWindow:
         self.ui.load_pages.analysis_btn_layout.addWidget(self.btn_3, Qt.AlignCenter, Qt.AlignCenter)
         self.ui.load_pages.no_videos_layout.addWidget(self.label_1, Qt.AlignCenter, Qt.AlignCenter)
 
-        self.logo = QSvgWidget(Functions.set_svg_image("logo_home.svg"))
+        # self.logo = QSvgWidget(Functions.set_svg_image("logo_home.svg"))
+        self.logo = QSvgWidget(Functions.set_svg_image("main_logo.svg"))
 
         self.ui.load_pages.page_1_layout.addWidget(self.logo, Qt.AlignCenter, Qt.AlignCenter)
 
