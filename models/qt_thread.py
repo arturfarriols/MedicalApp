@@ -13,7 +13,7 @@ class FunctionThread(QThread):
 
     def run(self):
         # Execute the computationally expensive function
-        status = self.backend_controller.process_videos(self.items)
+        status = self.backend_controller.final_process_videos(self.items)
 
         self.status_changed.emit(status)
 

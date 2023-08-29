@@ -245,7 +245,7 @@ def display_cropped_frames(window):
     print("this", window.btn_2)
 
     top_btn_settings = MainFunctions.get_title_bar_btn(window, "btn_top_settings")
-    top_btn_settings.set_active(False)
+    # top_btn_settings.set_active(False)
     window.ui.left_menu.select_only_one_tab(window.btn_3.objectName())
 
     # window.ui.left_menu.select_only_one_tab("btn_page_3")

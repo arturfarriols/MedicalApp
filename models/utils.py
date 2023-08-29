@@ -1,10 +1,13 @@
 import tensorflow as tf
 import numpy as np
 import cv2
+
+from collections import Counter
 import random
 
+
 upper_model_path = ".\models_checkpoints\model_checkpoints\my_checkpoint"
-lower_model_path = ".\models_checkpoints\model_checkpoints\my_checkpoint"
+lower_model_path = ".\models_checkpoints\model_checkpoints\my_checkpoint" 
 
 IMG_HEIGHT = 256
 IMG_WIDTH = 256
@@ -177,3 +180,30 @@ def find_sequence_end_indexes(arr):
         decreasing_indexes.append(len(arr) - 1)
 
     return increasing_indexes, decreasing_indexes
+
+def ordered_by_frequency(input_array):
+    # Count the occurrences of each element in the input array
+    element_count = Counter(input_array)
+
+    # Sort the elements based on their frequencies in descending order
+    sorted_elements = sorted(element_count, key=lambda x: (-element_count[x], x))
+
+    return sorted_elements
+
+def find_indexes_with_difference(arr1, arr2, target_difference = 300):
+    closest_difference = float('inf')
+    closest_indexes = None
+
+    for i, val1 in enumerate(arr1):
+        for j, val2 in enumerate(arr2):
+            difference = abs(val1 - val2)
+            if difference == target_difference:
+                # Found exact difference of 300
+                closest_difference = difference
+                closest_indexes = i, j
+                return closest_indexes, closest_difference
+            elif difference < closest_difference:
+                closest_difference = difference
+                closest_indexes = i, j
+
+    return closest_indexes, closest_difference

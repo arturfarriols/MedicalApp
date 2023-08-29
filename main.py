@@ -238,7 +238,7 @@ class MainWindow(QMainWindow):
                 status = display_cropped_frames(self)
                 if status == "Ok":
                     SetupMainWindow.set_analysis_tab(self)
-                    self.model_controller.initiate_models()
+                    # self.model_controller.initiate_models()
                     # print("items", widgets[0].items[0].id)
                     self.model_controller.initialize_thread_processing(widgets[0].items)
                 # print(self.model_controller.lower_segmentation_model.model.summary())

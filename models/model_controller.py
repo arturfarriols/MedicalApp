@@ -1,4 +1,6 @@
 from . segmentation_model import *
+from . model_pytorch import *
+from . segmentation_model_pytorch import *
 from . video import *
 from . utils import *
 from . qt_thread import *
@@ -29,6 +31,16 @@ class ModelController:
     def handle_status_changed(self, status):
         # Handle the status value here
         print("Received status:", status)
+
+    def final_process_videos(self, videos):
+        amount_of_videos = len(videos)
+        status = "Ok"
+
+        for video in videos:
+            res = self.final_process_video(video)
+
+    def final_process_video(self, video):
+        preprocessed_images = video.preprocess_video()
 
     def process_videos(self, videos):
         amount_of_frames_processed = 0
