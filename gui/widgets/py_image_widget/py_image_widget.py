@@ -24,6 +24,11 @@ class ImageWidget(QGraphicsView):
         self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
 
         self.load_image()
+        self.setMouseTracking(True)
+        self.setCursor(Qt.ArrowCursor)
+
+        current_cursor = self.cursor().shape()
+        print(f"Assigned Cursor: {current_cursor}")
 
     def load_image(self):
         image = self.images[self.image_index]
@@ -40,6 +45,8 @@ class ImageWidget(QGraphicsView):
             self.clicked_point = event.pos()
             self.draw_line()
             self.parent().update_clicked_point_label(self.clicked_point)
+            current_cursor = self.cursor().shape()
+            print(f"Assigned Cursor: {current_cursor}")
 
     def draw_line(self):
         self.clear_lines()
@@ -86,7 +93,7 @@ class ImageWidget(QGraphicsView):
         self.image_index = index
         self.scene.clear()
         self.load_image()
-        self.clicked_point = None
+        # self.clicked_point = None
 
     def clear_lines(self):
         print(len(self.line_items))

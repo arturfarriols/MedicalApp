@@ -29,12 +29,10 @@ class Model(pl.LightningModule):
             arch, encoder_name=encoder_name, in_channels=in_channels, classes=out_classes, **kwargs
         )
 
-        # preprocessing parameteres for image
         params = smp.encoders.get_preprocessing_params(encoder_name)
         self.register_buffer("std", torch.tensor(params["std"]).view(1, 3, 1, 1))
         self.register_buffer("mean", torch.tensor(params["mean"]).view(1, 3, 1, 1))
 
-        # for image segmentation dice loss could be the best first choice
         self.loss_fn = loss
         self.chosen_opt = optimizer
         self.learning_rate = learning_rate
@@ -43,12 +41,10 @@ class Model(pl.LightningModule):
 
 
     def forward(self, image):
-        # normalize image here
+        # normalize image
         image = (image - self.mean) / self.std
-        # print("image_treated", image.shape)
         if image.dim() == 3:
             image = image.unsqueeze(0)  # Add batch dimension if it's missing
-        # print("image_unsqueezed", image.shape)
         mask = self.model(image)
         return mask
 
@@ -57,9 +53,6 @@ class Model(pl.LightningModule):
         global NUMBER_OF_CLASSES
 
         image = batch[0]
-        # print(len(batch))
-        # print("")
-        # print("image", image.shape)
 
         # Shape of the image should be (batch_size, num_channels, height, width)
         # if you work with grayscale images, expand channels dim to have [batch_size, 1, height, width]

@@ -61,20 +61,20 @@ def open_file_browser(window):
             # File format is not valid
 
             # CREATE CUSTOM BUTTON 2
-            message_box = PyMessageBox(
-                text = "The selected file format is not valid.",
-                title = "Invalid File Format",
-                icon = QMessageBox.Warning, 
-                color = "#333333",
-                radius = 0,
-                msg_bg_color = "#F0F0F0",
-                btn_bg_color = "#F8F8F8",
-                btn_bg_color_hover = "#E8E8E8",
-                btn_bg_color_pressed = "#D0D0D0",
-                id = "warning pop up"
-            )
+            # message_box = PyMessageBox(
+            #     text = "The selected file format is not valid.",
+            #     title = "Invalid File Format",
+            #     icon = QMessageBox.Warning, 
+            #     color = "#333333",
+            #     radius = 0,
+            #     msg_bg_color = "#F0F0F0",
+            #     btn_bg_color = "#F8F8F8",
+            #     btn_bg_color_hover = "#E8E8E8",
+            #     btn_bg_color_pressed = "#D0D0D0",
+            #     id = "warning pop up"
+            # )
 
-            message_box.exec_()
+            # message_box.exec_()
             return None
         else:
             add_row(window, file_path)
@@ -161,9 +161,15 @@ def add_row(window, file_path):
 
 
     #ADD THE ELEMENTS TO THE ROW
-    window.table_widget.setItem(row_number, 0, QTableWidgetItem(file_name)) 
-    window.table_widget.setItem(row_number, 1, QTableWidgetItem(eta))
-    window.table_widget.setItem(row_number, 2, QTableWidgetItem(str(get_local_date())))  
+    file_name_item = QTableWidgetItem(file_name)
+    file_name_item.setFlags(file_name_item.flags() & ~Qt.ItemIsEditable)
+    eta_item = QTableWidgetItem(eta)
+    eta_item.setFlags(eta_item.flags() & ~Qt.ItemIsEditable)
+    date_item = QTableWidgetItem(str(get_local_date()))
+    date_item.setFlags(date_item.flags() & ~Qt.ItemIsEditable)
+    window.table_widget.setItem(row_number, 0, file_name_item) 
+    window.table_widget.setItem(row_number, 1, eta_item)
+    window.table_widget.setItem(row_number, 2, date_item)  
     window.table_widget.setCellWidget(row_number, 3, image_widget)
     window.table_widget.setCellWidget(row_number, 4, btn_widget) 
 
@@ -181,18 +187,48 @@ def delete_row(btn_table, table_widget):
             table_widget.cellWidget(i, 4).findChildren(PyTablePushButton)[0].set_row(i - 1)
         table_widget.removeRow(row)
 
+def round_if_necessary(value):
+    if isinstance(value, (int, float)):
+        rounded_value = round(value, 2)
+        if rounded_value.is_integer():
+            return int(rounded_value)  # Convert to int if it's a whole number
+        else:
+            return rounded_value
+    else:
+        return value  # Keep non-numeric values as they are
+
 def add_result(window, processed_results, video):
     name = os.path.basename(video.path)
     row_count = window.results_table.rowCount()
     column_count = window.results_table.columnCount()
+
+    # results_table_mutex = QMutex()
     
     for row in range(row_count):
         file_name = window.results_table.item(row, 0).text()
         if file_name == name:
-            for i, result in enumerate(processed_results):
-                result_item = QTableWidgetItem(str(result))
-                result_item.setTextAlignment(Qt.AlignCenter)
-                window.results_table.setItem(row, i + 1, result_item)
+            for col in range(1, column_count):
+                header_item = window.results_table.horizontalHeaderItem(col)
+                header_text = header_item.text() if header_item else ""
+                print("header_text", header_text)
+                result = round_if_necessary(processed_results[header_text])
+                item = QTableWidgetItem(str(result))
+                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                print(result)
+                item.setTextAlignment(Qt.AlignCenter)
+                window.results_table.table_mutex.lock()
+                try:
+                    window.results_table.setItem(row, col, item)
+                finally:
+                    window.results_table.table_mutex.unlock()
+                # Now you have both the header_text and the cell text
+                # result_item = QTableWidgetItem(str(processed_results[header_text]))  # Subtract 1 because the first column is for file names
+                # result_item.setTextAlignment(Qt.AlignCenter)
+                # window.results_table.setItem(row, col, result_item)
+            # for i, result in enumerate(processed_results):
+            #     result_item = QTableWidgetItem(str(result))
+            #     result_item.setTextAlignment(Qt.AlignCenter)
+            #     window.results_table.setItem(row, i + 1, result_item)
             break
     
 def display_cropped_frames(window):
@@ -234,9 +270,11 @@ def display_cropped_frames(window):
             message_box.exec_()
             return status
         else:
-            is_automatic, point = open_analysis_dialog(frames)
+            point = open_analysis_dialog(frames)
+            if point is None:
+                return 
             print(point)
-            video.set_point(is_automatic, point)
+            video.set_point(False, point)
             
             points[video.id] = point
 
@@ -258,9 +296,9 @@ def display_cropped_frames(window):
     # window.show()
     return "Ok"
 
-    
+@Slot(int)    
 def actualize_percentage(window, new_percentage):
-
+    print("new_percentage", new_percentage)
     window.circular_progress.set_value(new_percentage)
     # self.show()                
         
@@ -268,8 +306,8 @@ def actualize_percentage(window, new_percentage):
 def open_analysis_dialog(frames):
     dialog = AnalysisDialog(frames)
     dialog.exec_()
-    is_automatic = dialog.is_automatic
     point = dialog.point
+    print("point", point)
     del dialog
     
-    return is_automatic, point
+    return point

@@ -47,7 +47,7 @@ style = '''
     }}
 '''
 
-# PY PUSH BUTTON
+# PY MESSAGE BOX
 # ///////////////////////////////////////////////////////////////
 class PyMessageBox(QMessageBox):
     def __init__(
@@ -61,8 +61,8 @@ class PyMessageBox(QMessageBox):
         btn_bg_color,
         btn_bg_color_hover,
         btn_bg_color_pressed,
-        id = None,
         parent = None,
+        id = None
     ):
         super().__init__()
 
@@ -85,8 +85,6 @@ class PyMessageBox(QMessageBox):
         )
         self.setStyleSheet(custom_style)
 
-        # Set id
-        self.id = id
 
     def get_style_sheet(self):
         return self.styleSheet()

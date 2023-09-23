@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_pagesEHyJZm.ui'
+## Form generated from reading UI file 'main_pagesDXBToV.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.3
 ##
@@ -127,20 +127,33 @@ class Ui_MainPages(object):
         self.percentage_layout = QHBoxLayout(self.frame_5)
         self.percentage_layout.setSpacing(0)
         self.percentage_layout.setObjectName(u"percentage_layout")
-        self.percentage_layout.setContentsMargins(0, 0, 0, 0)
+        self.percentage_layout.setContentsMargins(0, 0, 0, 5)
 
         self.verticalLayout.addWidget(self.frame_5)
 
         self.frame_6 = QFrame(self.videos_page)
         self.frame_6.setObjectName(u"frame_6")
+        self.frame_6.setMaximumSize(QSize(16777215, 16777215))
         self.frame_6.setFrameShape(QFrame.StyledPanel)
         self.frame_6.setFrameShadow(QFrame.Raised)
         self.results_table_layout = QHBoxLayout(self.frame_6)
         self.results_table_layout.setSpacing(0)
         self.results_table_layout.setObjectName(u"results_table_layout")
-        self.results_table_layout.setContentsMargins(0, 0, 0, 0)
+        self.results_table_layout.setContentsMargins(0, 5, 0, 10)
 
         self.verticalLayout.addWidget(self.frame_6)
+
+        self.frame_7 = QFrame(self.videos_page)
+        self.frame_7.setObjectName(u"frame_7")
+        self.frame_7.setMaximumSize(QSize(16777215, 100))
+        self.frame_7.setFrameShape(QFrame.StyledPanel)
+        self.frame_7.setFrameShadow(QFrame.Raised)
+        self.export_layout = QHBoxLayout(self.frame_7)
+        self.export_layout.setSpacing(0)
+        self.export_layout.setObjectName(u"export_layout")
+        self.export_layout.setContentsMargins(0, 10, 0, 0)
+
+        self.verticalLayout.addWidget(self.frame_7)
 
         self.page_3_pages.addWidget(self.videos_page)
 
@@ -154,7 +167,7 @@ class Ui_MainPages(object):
         self.retranslateUi(MainPages)
 
         self.pages.setCurrentIndex(2)
-        self.page_3_pages.setCurrentIndex(0)
+        self.page_3_pages.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainPages)

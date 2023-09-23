@@ -15,6 +15,9 @@ class Video:
         self.is_automatic = None
         self.point = None
 
+    def get_file_name(self):
+        return os.path.basename(self.path)
+
     def set_point(self, is_automatic, point):
         self.is_automatic = is_automatic
         self.point = point
@@ -102,6 +105,32 @@ class Video:
         print(type(cropped_frames[0]))
 
         return status, cropped_frames
+    
+    def calculate_mean_distance(self, arr1, arr2):
+        # Initialize variables to store the sum and count of valid differences
+        sum_valid_diff = 0
+        count_valid_diff = 0
+
+        # Zip the two arrays together to iterate over their elements simultaneously
+        for tup1, tup2 in zip(arr1, arr2):
+            # Check if either element is None or zero and skip it
+            if tup1 is None or tup2 is None or tup1[1] == 0 or tup2[1] == 0:
+                continue
+
+            # Calculate the difference between the second elements of the tuples
+            diff = abs(tup1[1] - tup2[1])
+
+            # Add the valid difference to the sum and increment the count
+            sum_valid_diff += diff
+            count_valid_diff += 1
+
+        # Calculate the mean of the valid differences (avoid division by zero)
+        if count_valid_diff > 0:
+            mean_difference = sum_valid_diff / count_valid_diff
+        else:
+            mean_difference = None  # Handle the case where there are no valid differences
+
+        return mean_difference
 
     def locate_image_rectangle(self, num_frames=10, threshold_value=10):
 
@@ -140,7 +169,7 @@ class Video:
 
             frame_copy = frame.copy()
             cv2.drawContours(frame_copy, [largest_contour], -1, (0, 255, 0), 2)
-            # cv2_imshow(frame_copy)
+            # cv2.imwrite("frame_copy.jpg", frame_copy)
 
             # Obtain the highest and lowest coordinates
             x_values = largest_contour[:, :, 0]
@@ -214,6 +243,8 @@ class Video:
         while not found and counter < patience:
             vertices, distances = self.locate_image_rectangle(threshold_value=patience - counter)
 
+            distance = self.calculate_mean_distance(distances[1], distances[2])
+
             min_xs, max_xs, min_ys, max_ys = vertices
 
             ordered_min_xs = ordered_by_frequency(min_xs)
@@ -233,6 +264,8 @@ class Video:
             print(ordered_max_xs)
             print(ordered_min_ys)
             print(ordered_max_ys)
+            print("DISTANCES", distances)
+            print("DISTANCE", distance)
 
         if not found:
             raise ValueError("Image is not suitable to be processed")
@@ -250,7 +283,7 @@ class Video:
         # corners = [top_left_corner, bottom_left_corner, top_right_corner, bottom_right_corner]
 
         # print(max_y)
-        return [min_y, max_y, min_x, max_x]
+        return [min_y, max_y, min_x, max_x], distance
     
     def process_video_and_concatenate_columns(self, extreme_points):
         cap = cv2.VideoCapture(self.path)
@@ -333,14 +366,14 @@ class Video:
             right = width
             box = (left, 0, right, height)
             cropped_img = image[0:height, left:right]
-            cropped_images.append(cropped_img)
+            cropped_images.append({"image": cropped_img, "stride": left})
             print(left)
 
         return cropped_images
 
     def preprocess_video(self):
         print("I never reach this")
-        extreme_points = self.obtain_extreme_points()
+        extreme_points, distance = self.obtain_extreme_points()
         print("X coordinate is", self.point.x())
         concatenated_image = self.process_video_and_concatenate_columns(extreme_points)
 
@@ -350,17 +383,26 @@ class Video:
         concatenated_images = self.generate_sub_images(concatenated_image)
 
         # # Define the filename for the saved image
-        # output_filename = 'output_image.jpg'
+        output_filename = 'output_image.jpg'
+
+        app_folder = os.environ.get("MY_APP_FOLDER")
+        output_path = os.path.join(app_folder, output_filename)
 
         # # Save the image in the current path
-        # cv2.imwrite(output_filename, concatenated_image)
+        print(len(concatenated_images))
+        print(concatenated_images[0].keys())
+        cv2.imwrite(output_path, concatenated_images[0]['image'])
 
         # # Get the absolute path of the saved image
         # saved_image_path = os.path.abspath(output_filename)
 
         # # Print the path
         # print("Image saved at:", saved_image_path)
+        # print(concatenated_images[0]['stride'])
+        # print(concatenated_images[4]['stride'])
+        # print(concatenated_images[6]['stride'])
+        # print(concatenated_images[7]['stride'])
 
-        return None
+        return concatenated_images, distance
 
 

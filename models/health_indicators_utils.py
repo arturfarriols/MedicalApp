@@ -1,3 +1,5 @@
+import math
+
 # Symbols for calculateHealthIndicators functions #
 PERCENTAGE = "%" 
 MILLIGRAMS = "mg"
@@ -93,9 +95,29 @@ EF_NAME = "EF"
 FS_NAME = "FS"
 SV_NAME = "SV"
 CO_NAME = "CO"
+HR_NAME = "HR"
 UNHEALTHY_INDICATORS = "Unhealthy indicators counter"
 HEALTHY_INDICATORS = "Healhy indicators counter"
 
+    
+PIXEL_TO_METRICS = {"upper_min_differences": IVSD_NAME,
+                            "upper_max_differences": IVSS_NAME,
+                            "min_central_differences": LVIDS_NAME,
+                            "max_central_differences": LVIDD_NAME,
+                            "lower_min_differences": LVPWD_NAME,
+                            "lower_max_differences": LVPWS_NAME,
+                            }
+
+BASE_METRICS_DEFAULT_DICTIONARY = {IVSS_NAME: -1,
+                            IVSD_NAME: -1,
+                            LVIDS_NAME: -1,
+                            LVIDD_NAME: -1,
+                            LVPWS_NAME: -1,
+                            LVPWD_NAME: -1,
+                            HR_NAME: -1,
+                            }
+
+HEART_RATE_FORMULA = lambda x: -205.58321340 / (1 + -1.1300887 * math.exp(0.0083321 * x))
 
 #Check the interval to know if is healthy or unhealthy and prints it
 def checkInterval(negativeInterval, positiveInterval, value, name, print_it = False):

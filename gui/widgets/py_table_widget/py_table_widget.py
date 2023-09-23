@@ -60,6 +60,7 @@ class PyTableWidget(QTableWidget):
 
         #SET ATTRIBUTES
         self.items = []
+        self.table_mutex = QMutex()
 
     # SET STYLESHEET
     def set_stylesheet(

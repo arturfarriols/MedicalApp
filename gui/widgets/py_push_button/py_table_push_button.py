@@ -1,7 +1,7 @@
 # IMPORT QT CORE
 from . py_push_button import *
 
-# Custom PyPushButton subclass
+# Custom PyTablePushButton subclass
 class PyTablePushButton(PyPushButton):
     def __init__(
         self, 

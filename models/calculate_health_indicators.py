@@ -88,17 +88,33 @@ def calculateRelative_wall_thickness(LVPWd, LVIVSd, LVIDd):
     RWTCalculation = (LVPWd+LVIVSd)/(LVIDd)
     return RWTCalculation
 
-def calculateAll(IVSd, IVSs, LVIDd, LVIDs, LVPWd, LVPWs, HR, print_it = False):
+def calculate_basic_metrics(pixel_metrics, milimeter_to_pixels):
+    mean_horizontal_distance = 0
+    metrics = {}
+
+    for key, value in pixel_metrics.items():
+        if key not in ["upper_mean_distances", "lower_mean_distances"]:
+            metrics[HIUtils.PIXEL_TO_METRICS[key]] = value / milimeter_to_pixels
+        else:
+            mean_horizontal_distance += value
+
+    mean_horizontal_distance /= 2
+    print(mean_horizontal_distance)
+    metrics['HR'] = HIUtils.HEART_RATE_FORMULA(mean_horizontal_distance)
+
+    return metrics
+
+def calculateAll(metrics, print_it = True):#IVSd, IVSs, LVIDd, LVIDs, LVPWd, LVPWs, HR, print_it = True):
     # MISSING VALUES
 
-    LVESV_value = calculateLVESV(LVIDs)
-    LVEDV_value = calculateLVEDV(LVIDd)
-    FS_value = calculateFS(LVIDd, LVIDs)
+    LVESV_value = calculateLVESV(metrics[HIUtils.LVIDS_NAME]) #LVIDs
+    LVEDV_value = calculateLVEDV(metrics[HIUtils.LVIDD_NAME]) #LVIDd
+    FS_value = calculateFS(metrics[HIUtils.LVIDD_NAME], metrics[HIUtils.LVIDS_NAME]) #LVIDd, LVIDs
     EF_value = calculateEF(LVEDV_value,LVESV_value)
     # LV_mass_value = calculateLV_mass(LVIDd, LVAWd, LVPWd)
     SV_value = calculateStroke_volume(LVEDV_value, LVESV_value)
-    CO_value = calculateCardiac_output(SV_value, HR)
-    RWT_value = calculateRelative_wall_thickness(LVPWd,IVSd,LVIDd)
+    CO_value = calculateCardiac_output(SV_value, metrics[HIUtils.HR_NAME]) #HR
+    RWT_value = calculateRelative_wall_thickness(metrics[HIUtils.LVPWD_NAME], metrics[HIUtils.IVSD_NAME], metrics[HIUtils.LVIDD_NAME]) #LVPWd,IVSd,LVIDd
     
     json_response = {'LVESV': LVESV_value, 
                        'LVEDV': LVEDV_value,
@@ -109,16 +125,16 @@ def calculateAll(IVSd, IVSs, LVIDd, LVIDs, LVPWd, LVPWs, HR, print_it = False):
                        'CO': CO_value,
                        'RWT': RWT_value}
 
-    
+    json_response.update(metrics)
 
-    result = compareHI.compareAll(25, HR, LVPWd, LVPWs, LVIDs, LVIDd, IVSd, IVSs, LVESV_value, LVEDV_value, EF_value, FS_value, SV_value, CO_value, print_it)
-    json_response['healthy_num'] = result[0]
-    json_response['unhealthy_num'] = result[1]
+    # result = compareHI.compareAll(25, HR, LVPWd, LVPWs, LVIDs, LVIDd, IVSd, IVSs, LVESV_value, LVEDV_value, EF_value, FS_value, SV_value, CO_value, print_it)
+    # json_response['healthy_num'] = result[0]
+    # json_response['unhealthy_num'] = result[1]
 
-    if(not print_it):
+    if(print_it):
         print(json.dumps(json_response))
 
-    return result
+    return json_response
 
 
 

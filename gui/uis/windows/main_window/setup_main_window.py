@@ -419,7 +419,7 @@ class SetupMainWindow:
             scroll_bar_btn_color = self.themes["app_color"]["dark_four"],
             context_color = self.themes["app_color"]["context_color"]
         )
-        self.results_table.setColumnCount(10)
+        self.results_table.setColumnCount(14)
         # self.table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.results_table.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.results_table.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -431,43 +431,59 @@ class SetupMainWindow:
 
         self.column_7 = QTableWidgetItem()
         self.column_7.setTextAlignment(Qt.AlignCenter)
-        self.column_7.setText("IVS")
+        self.column_7.setText("IVSs")
 
         self.column_8 = QTableWidgetItem()
         self.column_8.setTextAlignment(Qt.AlignCenter)
-        self.column_8.setText("LVID")
+        self.column_8.setText("IVSd")
 
         self.column_9 = QTableWidgetItem()
         self.column_9.setTextAlignment(Qt.AlignCenter)
-        self.column_9.setText("LVPW")
+        self.column_9.setText("LVIDs")
 
         self.column_10 = QTableWidgetItem()
         self.column_10.setTextAlignment(Qt.AlignCenter)
-        self.column_10.setText("LVESV")
+        self.column_10.setText("LVIDd")
 
         self.column_11 = QTableWidgetItem()
         self.column_11.setTextAlignment(Qt.AlignCenter)
-        self.column_11.setText("LVEDV")
+        self.column_11.setText("LVPWs")
 
         self.column_12 = QTableWidgetItem()
         self.column_12.setTextAlignment(Qt.AlignCenter)
-        self.column_12.setText("FS")
+        self.column_12.setText("LVPWd")
 
         self.column_13 = QTableWidgetItem()
         self.column_13.setTextAlignment(Qt.AlignCenter)
-        self.column_13.setText("EF")
+        self.column_13.setText("LVESV")
 
         self.column_14 = QTableWidgetItem()
         self.column_14.setTextAlignment(Qt.AlignCenter)
-        self.column_14.setText("LV")
+        self.column_14.setText("LVEDV")
 
         self.column_15 = QTableWidgetItem()
         self.column_15.setTextAlignment(Qt.AlignCenter)
-        self.column_15.setText("SV")
+        self.column_15.setText("FS")
 
         self.column_16 = QTableWidgetItem()
         self.column_16.setTextAlignment(Qt.AlignCenter)
-        self.column_16.setText("CO")
+        self.column_16.setText("EF")
+
+        # self.column_17 = QTableWidgetItem()
+        # self.column_17.setTextAlignment(Qt.AlignCenter)
+        # self.column_17.setText("LV")
+
+        self.column_17 = QTableWidgetItem()
+        self.column_17.setTextAlignment(Qt.AlignCenter)
+        self.column_17.setText("SV")
+
+        self.column_18 = QTableWidgetItem()
+        self.column_18.setTextAlignment(Qt.AlignCenter)
+        self.column_18.setText("CO")
+
+        self.column_19 = QTableWidgetItem()
+        self.column_19.setTextAlignment(Qt.AlignCenter)
+        self.column_19.setText("HR")
 
         # Set column
         self.results_table.setHorizontalHeaderItem(0, self.column_6)
@@ -480,7 +496,10 @@ class SetupMainWindow:
         self.results_table.setHorizontalHeaderItem(7, self.column_13)
         self.results_table.setHorizontalHeaderItem(8, self.column_14)
         self.results_table.setHorizontalHeaderItem(9, self.column_15)
-
+        self.results_table.setHorizontalHeaderItem(10, self.column_16)
+        self.results_table.setHorizontalHeaderItem(11, self.column_17)
+        self.results_table.setHorizontalHeaderItem(12, self.column_18)
+        self.results_table.setHorizontalHeaderItem(13, self.column_19)
 
         # Set the width of a specific column
         # target_column = 0
@@ -490,7 +509,7 @@ class SetupMainWindow:
         # # Set the horizontal header resize mode to stretch
         # header = table_widget.horizontalHeader()
         # header.setSectionResizeMode(QHeaderView.Stretch)
-        self.results_table.setColumnWidth(0, 340)
+        self.results_table.setColumnWidth(0, 200)
         self.results_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.results_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.results_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
@@ -501,6 +520,10 @@ class SetupMainWindow:
         self.results_table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)
         self.results_table.horizontalHeader().setSectionResizeMode(8, QHeaderView.ResizeMode.Stretch)  
         self.results_table.horizontalHeader().setSectionResizeMode(9, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(10, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(11, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(12, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(13, QHeaderView.ResizeMode.Stretch)
 
         self.results_table.setRowCount(row_count)
 
@@ -520,10 +543,28 @@ class SetupMainWindow:
         )
         self.circular_progress.setFixedSize(160,160)
 
+        # CREATE CUSTOM BUTTON 2
+        self.btn_export = PyPushButton(
+            text = "Export results",
+            radius = 8,
+            color = self.themes["app_color"]["text_foreground"],
+            bg_color = self.themes["app_color"]["dark_one"],
+            bg_color_hover = self.themes["app_color"]["dark_three"],
+            bg_color_pressed = self.themes["app_color"]["dark_four"],
+            text_align = "center",
+            id = "export_btn"
+        )
+        # self.btn_export.setEnabled(False)
+        self.btn_export.setMinimumHeight(40)
+        self.btn_export.setObjectName("export_btn")
+        self.btn_export.setMinimumWidth(200)
+        self.btn_export.setMaximumWidth(200)
+        self.btn_export.clicked.connect(lambda: self.button_clicked(self.btn_export.id))
 
         self.ui.load_pages.percentage_layout.addWidget(self.circular_progress,  Qt.AlignCenter, Qt.AlignCenter)
         self.ui.load_pages.percentage_layout.addWidget(self.btn_cancel,  Qt.AlignCenter, Qt.AlignRight)
         self.ui.load_pages.results_table_layout.addWidget(self.results_table)
+        self.ui.load_pages.export_layout.addWidget(self.btn_export)
 
     def actualize_percentage(self, percentage):
         self.circular_progress.set_value(percentage)

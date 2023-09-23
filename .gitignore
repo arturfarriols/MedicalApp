@@ -1,6 +1,9 @@
+*.jpg
+*.ckpt
+*.avi
 __pycache__/
 .vscode/
 .git/
 .pyc
-*.avi
+
 eco1.avi

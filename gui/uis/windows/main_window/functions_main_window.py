@@ -151,16 +151,19 @@ class MainFunctions():
             print("Selected file:", file_name)
 
     def clear_analysis_tab(self):
-        while self.ui.load_pages.percentage_layout.count():
-            item = self.ui.load_pages.percentage_layout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.deleteLater()
-                del widget
-
-        while self.ui.load_pages.results_table_layout.count():
-            item = self.ui.load_pages.results_table_layout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.deleteLater()
-                del widget
+        layouts = [self.ui.load_pages.percentage_layout,
+                   self.ui.load_pages.results_table_layout,
+                   self.ui.load_pages.export_layout]
+        for layout in layouts:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget() if item is not None else None
+                if widget is not None:
+                    widget.deleteLater()
+                    del widget
+        # while self.ui.load_pages.results_table_layout.count():
+        #     item = self.ui.load_pages.results_table_layout.takeAt(0)
+        #     widget = item.widget()
+        #     if widget is not None:
+        #         widget.deleteLater()
+        #         del widget

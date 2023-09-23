@@ -38,7 +38,13 @@ from gui.uis.windows.main_window import *
 # ///////////////////////////////////////////////////////////////
 from gui.widgets import *
 
+# IMPORT MDDEL CONTROLLER
+# ///////////////////////////////////////////////////////////////
 from models.model_controller import *
+
+# IMPORT EXCEPTION HANDLER
+# ///////////////////////////////////////////////////////////////
+from exceptions.exception_handler import ExceptionHandler
 
 # ADJUST QT FONT DPI FOR HIGHT SCALE AN 4K MONITOR
 # ///////////////////////////////////////////////////////////////
@@ -68,6 +74,15 @@ class MainWindow(QMainWindow):
         SetupMainWindow.setup_gui(self)
 
         self.model_controller = ModelController(self)
+        self.model_controller.percentage_actualized.connect(self.actualize_percentage_v2)
+
+        self.exception_handler = ExceptionHandler()
+
+        # Get the current working directory (folder containing main.py)
+        app_folder = os.path.dirname(os.path.abspath(__file__))
+
+        # Set the environment variable
+        os.environ["MY_APP_FOLDER"] = app_folder
 
         # SHOW MAIN WINDOW
         # ///////////////////////////////////////////////////////////////
@@ -229,8 +244,13 @@ class MainWindow(QMainWindow):
     @Slot(str)
     def button_clicked(self, button_id, widgets = []):
         if button_id == "browse_files_btn":
-            print("""Button "browse_files_btn" was clicked""")
-            result = open_file_browser(self)
+            try:
+                print("""Button "browse_files_btn" was clicked""")
+                video_path = self.model_controller.import_video()
+                add_row(self, video_path)
+                result = None #open_file_browser(self)
+            except Exception as e:
+                self.exception_handler.handle_exception(e)
 
         if button_id == "analysis_btn":
             if self.model_controller.processing_videos == False:
@@ -238,13 +258,15 @@ class MainWindow(QMainWindow):
                 status = display_cropped_frames(self)
                 if status == "Ok":
                     SetupMainWindow.set_analysis_tab(self)
-                    # self.model_controller.initiate_models()
+                    self.model_controller.initiate_models()
                     # print("items", widgets[0].items[0].id)
+                    self.model_controller.finished_processing
                     self.model_controller.initialize_thread_processing(widgets[0].items)
                 # print(self.model_controller.lower_segmentation_model.model.summary())
                 # self.model_controller.button1_clicked
                 # print(row_count)
                 result = None
+                    
             else:
                 # CREATE CUSTOM BUTTON 2
                 message_box = PyMessageBox(
@@ -258,7 +280,7 @@ class MainWindow(QMainWindow):
                     btn_bg_color_hover = "#E8E8E8",
                     btn_bg_color_pressed = "#D0D0D0",
                     id = "warning pop up"
-                )
+                ) #Modify with exceptions
 
                 message_box.exec_()
                 result = None
@@ -268,9 +290,33 @@ class MainWindow(QMainWindow):
             self.model_controller.processing_videos = False
             if self.model_controller.thread is not None:
                 print('STOPPING EXECUTION')
-                self.model_controller.thread.stop_execution()
+                self.model_controller.thread.stop_execution() # REFACTOR
 
             result = None
+
+        if button_id == "export_btn":
+            # if self.model_controller.finished_processing: 
+            try:
+                self.model_controller.export_results()
+            except Exception as e:
+                self.exception_handler.handle_exception(e)
+            result = None
+            # else: #Modify with exceptions
+            #     message_box = PyMessageBox(
+            #         text = "An analysis must be finished before exporting its results.",
+            #         title = "No results to export",
+            #         icon = QMessageBox.Warning, 
+            #         color = "#333333",
+            #         radius = 0,
+            #         msg_bg_color = "#F0F0F0",
+            #         btn_bg_color = "#F8F8F8",
+            #         btn_bg_color_hover = "#E8E8E8",
+            #         btn_bg_color_pressed = "#D0D0D0",
+            #         id = "warning pop up"
+            #     )
+
+            #     message_box.exec_()
+            #     result = None
 
         return result
     
@@ -301,6 +347,11 @@ class MainWindow(QMainWindow):
     def mousePressEvent(self, event):
         # SET DRAG POS WINDOW
         self.dragPos = event.globalPos()
+
+    @Slot(int)    
+    def actualize_percentage_v2(self, new_percentage):
+        print("new_percentage", new_percentage)
+        self.circular_progress.set_value(new_percentage)
 
 
 # SETTINGS WHEN TO START
