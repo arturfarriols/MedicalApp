@@ -39,6 +39,8 @@ from gui.uis.utils import *
 
 from models import * 
 
+from exceptions.exceptions_core import *
+
 def _check_file_extension_is_valid(file_path):
     valid_extensions = ['py', 'mp4', 'avi', 'mov', 'mkv', 'wmv'] #Remove .py
     
@@ -190,7 +192,7 @@ def delete_row(btn_table, table_widget):
 def round_if_necessary(value):
     if isinstance(value, (int, float)):
         rounded_value = round(value, 2)
-        if rounded_value.is_integer():
+        if isinstance(rounded_value, (int)) or rounded_value.is_integer():
             return int(rounded_value)  # Convert to int if it's a whole number
         else:
             return rounded_value
@@ -235,48 +237,55 @@ def display_cropped_frames(window):
     number_of_rows = window.table_widget.rowCount()
     if number_of_rows == 0:
         # CREATE CUSTOM BUTTON 2
-        message_box = PyMessageBox(
-            text = "There is no video to analyze.",
-            title = "Any video chosen",
-            icon = QMessageBox.Warning, 
-            color = "#333333",
-            radius = 0,
-            msg_bg_color = "#F0F0F0",
-            btn_bg_color = "#F8F8F8",
-            btn_bg_color_hover = "#E8E8E8",
-            btn_bg_color_pressed = "#D0D0D0",
-            id = "warning pop up"
-        )
+        raise ResourceNotFoundException(RT.VIDEO)
+        # message_box = PyMessageBox(
+        #     text = "There is no video to analyze.",
+        #     title = "Any video chosen",
+        #     icon = QMessageBox.Warning, 
+        #     color = "#333333",
+        #     radius = 0,
+        #     msg_bg_color = "#F0F0F0",
+        #     btn_bg_color = "#F8F8F8",
+        #     btn_bg_color_hover = "#E8E8E8",
+        #     btn_bg_color_pressed = "#D0D0D0",
+        #     id = "warning pop up"
+        # )
 
-        message_box.exec_()
-        return "There is no video to analyze."
-
+        # message_box.exec_()
+        # return "There is no video to analyze."
     points = {}
     for video in window.table_widget.items:
         status, frames = video.get_cropped_frames()
+        # print("STATUS", status)
+        # status = "NOK"
+        # print("STATUS", status)
         if status != "Ok":
-            message_box = PyMessageBox(
-                text = status,
-                title = "Error loading the video",
-                icon = QMessageBox.Warning, 
-                color = "#333333",
-                radius = 0,
-                msg_bg_color = "#F0F0F0",
-                btn_bg_color = "#F8F8F8",
-                btn_bg_color_hover = "#E8E8E8",
-                btn_bg_color_pressed = "#D0D0D0",
-                id = "warning pop up"
-            )
-            message_box.exec_()
-            return status
+        #     message_box = PyMessageBox(
+        #         text = status,
+        #         title = "Error loading the video",
+        #         icon = QMessageBox.Warning, 
+        #         color = "#333333",
+        #         radius = 0,
+        #         msg_bg_color = "#F0F0F0",
+        #         btn_bg_color = "#F8F8F8",
+        #         btn_bg_color_hover = "#E8E8E8",
+        #         btn_bg_color_pressed = "#D0D0D0",
+        #         id = "warning pop up"
+        #     )
+        #     message_box.exec_()
+            # return status
+            raise VideoErrorException(video_name=video.get_file_name())
         else:
-            point = open_analysis_dialog(frames)
-            if point is None:
-                return 
-            print(point)
-            video.set_point(False, point)
-            
-            points[video.id] = point
+            try:
+                point = open_analysis_dialog(frames)
+                if point is None:
+                    return 
+                print(point)
+                video.set_point(False, point)
+                
+                points[video.id] = point
+            except Exception as e:
+                raise(e)
 
     MainFunctions.set_page(window, window.ui.load_pages.page_3)
     window.ui.load_pages.page_3_pages.setCurrentIndex(1)

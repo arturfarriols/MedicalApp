@@ -383,15 +383,15 @@ class Video:
         concatenated_images = self.generate_sub_images(concatenated_image)
 
         # # Define the filename for the saved image
-        output_filename = 'output_image.jpg'
+        # output_filename = 'output_image.jpg'
 
-        app_folder = os.environ.get("MY_APP_FOLDER")
-        output_path = os.path.join(app_folder, output_filename)
+        # app_folder = os.environ.get("MY_APP_FOLDER")
+        # output_path = os.path.join(app_folder, output_filename)
 
         # # Save the image in the current path
-        print(len(concatenated_images))
-        print(concatenated_images[0].keys())
-        cv2.imwrite(output_path, concatenated_images[0]['image'])
+        # print(len(concatenated_images))
+        # print(concatenated_images[0].keys())
+        # cv2.imwrite(output_path, concatenated_images[0]['image'])
 
         # # Get the absolute path of the saved image
         # saved_image_path = os.path.abspath(output_filename)
@@ -402,6 +402,8 @@ class Video:
         # print(concatenated_images[4]['stride'])
         # print(concatenated_images[6]['stride'])
         # print(concatenated_images[7]['stride'])
+
+        print("SHAPE", np.shape(concatenated_images))
 
         return concatenated_images, distance
 

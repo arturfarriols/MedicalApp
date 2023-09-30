@@ -7,3 +7,4 @@ from . model_pytorch import Model
 from . segmentation_model_pytorch import *
 from . data_manager import DataManager
 from . export_formats_enum import ExportFormats
+from . model_controller import ModelController

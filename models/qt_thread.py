@@ -4,6 +4,7 @@ from qt_core import *
 class FunctionThread(QThread):
     finished = Signal()
     status_changed = Signal(str)
+    # exception_raised = Signal(Exception)
 
     def __init__(self, backend_controller, items):
         super().__init__()
@@ -12,13 +13,14 @@ class FunctionThread(QThread):
         self.items = items
 
     def run(self):
-        # Execute the computationally expensive function
-        status = self.backend_controller.final_process_videos(self.items)
-
-        self.status_changed.emit(status)
-
-        # Emit the finished signal when done
-        self.finished.emit()
+        try:
+            status = self.backend_controller.final_process_videos(self.items)
+        except Exception as e:
+            # self.exception_raised.emit(e)
+            raise(e)
+        finally:
+            # self.status_changed.emit(status)
+            self.finished.emit()
 
     def stop_execution(self):
         self._stop_execution = True

@@ -207,3 +207,14 @@ def find_indexes_with_difference(arr1, arr2, target_difference = 300):
                 closest_indexes = i, j
 
     return closest_indexes, closest_difference
+
+def replace_negative_values(input_dict, replacement_value):
+    # Check if any value in the dictionary is negative
+    has_negative_value = any(value < 0 for value in input_dict.values())
+
+    if has_negative_value:
+        # If there's a negative value, replace all values with the specified replacement value
+        return {key: replacement_value for key in input_dict}
+    else:
+        # If there are no negative values, return the original dictionary
+        return input_dict

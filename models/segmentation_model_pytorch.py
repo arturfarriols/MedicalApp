@@ -259,16 +259,16 @@ class SegmentationModel:
 
         # Load the grayscale image
         # image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-
+        extreme_pixels = []
         # Check if the image was successfully loaded
-        if image is None:
-            print("Error: Unable to read the image from the specified path.")
-        else:
+        # if image is None:
+        #     print("Error: Unable to read the image from the specified path.")
+        if isinstance(image, np.ndarray):
             # Get the height and width of the image
             height, width = image.shape
 
             # Initialize a list to store the extreme pixels position for each column
-            extreme_pixels = []
+            
 
             # Loop through each column
             for col in range(width):
@@ -293,7 +293,7 @@ class SegmentationModel:
                         row -= 1
 
             # Now, 'extreme_pixels' contains the position of the extreme pixel for each column.
-            return extreme_pixels
+        return extreme_pixels
         
     def create_subarrays(self, input_array):
         result = []
@@ -641,7 +641,11 @@ class SegmentationModel:
         image_1, image_2 = self.divide_predicted_values(mask, display=False)
 
         processed_image_1 = self.filter_and_resize_predictions(image_1)
+        if processed_image_1 is None:
+            processed_image_1 = []
         processed_image_2 = self.filter_and_resize_predictions(image_2)
+        if processed_image_2 is None:
+            processed_image_2 = []
 
         extreme_points_1_up = self.get_extreme_pixels(processed_image_1.copy(), store_uppermost=True)
         extreme_points_1_down = self.get_extreme_pixels(processed_image_1.copy(), store_uppermost=False)

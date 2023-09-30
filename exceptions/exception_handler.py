@@ -50,7 +50,14 @@ class ExceptionHandler:
         self.generate_message_box(text=formated_text, title=title)
 
     def handle_model_error(self, exception):
-        pass
+        text, title = CUSTOM_EXCEPTION_MESSAGES.get(type(exception)).get(exception.error_type).values()
+        self.generate_message_box(text=text, title=title)
+
+
+    def handle_video_error(self, exception):
+        text, title = CUSTOM_EXCEPTION_MESSAGES.get(type(exception)).values()
+        formated_text = text.format(video_name=exception.video_name)
+        self.generate_message_box(text=formated_text, title=title)
 
     def handle_generic_exception(self, exception):
         text, title = DEFAULT_EXCEPTION_MESSAGE.values()

@@ -73,8 +73,10 @@ class MainWindow(QMainWindow):
         self.hide_grips = True # Show/Hide resize grips
         SetupMainWindow.setup_gui(self)
 
-        self.model_controller = ModelController(self)
+        self.model_controller = ModelController()
         self.model_controller.percentage_actualized.connect(self.actualize_percentage_v2)
+        self.model_controller.results_obtained.connect(self.actualize_results_table)
+        self.model_controller.training_exception_raised.connect(self.raise_training_exception)
 
         self.exception_handler = ExceptionHandler()
 
@@ -243,6 +245,8 @@ class MainWindow(QMainWindow):
 
     @Slot(str)
     def button_clicked(self, button_id, widgets = []):
+        # print("SENDER", self.ui.left_column.sender())
+        result = None
         if button_id == "browse_files_btn":
             try:
                 print("""Button "browse_files_btn" was clicked""")
@@ -255,17 +259,28 @@ class MainWindow(QMainWindow):
         if button_id == "analysis_btn":
             if self.model_controller.processing_videos == False:
                 print("analysis_btn was clicked")
-                status = display_cropped_frames(self)
-                if status == "Ok":
-                    SetupMainWindow.set_analysis_tab(self)
-                    self.model_controller.initiate_models()
-                    # print("items", widgets[0].items[0].id)
-                    self.model_controller.finished_processing
-                    self.model_controller.initialize_thread_processing(widgets[0].items)
+                try:
+                    status = display_cropped_frames(self)
+                    if status == "Ok":
+                        SetupMainWindow.set_analysis_tab(self)
+                        if self.model_controller.model is None:
+                            self.model_controller.initiate_models()
+                        # print("items", widgets[0].items[0].id)
+                        self.model_controller.finished_processing
+                        print("type(widgets[0].items)", type(widgets[0].items))
+                        print("widgets[0].items", widgets[0].items)
+                        self.model_controller.initialize_thread_processing(widgets[0].items)
+                        result = None
+                except Exception as e:
+                    print("EXCEPTION", e)
+                    print(type(e))
+                    self.exception_handler.handle_exception(e)
+
+
                 # print(self.model_controller.lower_segmentation_model.model.summary())
                 # self.model_controller.button1_clicked
                 # print(row_count)
-                result = None
+                
                     
             else:
                 # CREATE CUSTOM BUTTON 2
@@ -287,10 +302,11 @@ class MainWindow(QMainWindow):
         
         if button_id == "cancel_btn":
             print("cancel_btn was clicked")
-            self.model_controller.processing_videos = False
+            # self.model_controller.processing_videos = False
             if self.model_controller.thread is not None:
                 print('STOPPING EXECUTION')
-                self.model_controller.thread.stop_execution() # REFACTOR
+                self.model_controller.stop_processing = True
+                # self.model_controller.thread.stop_execution() # REFACTOR
 
             result = None
 
@@ -323,8 +339,10 @@ class MainWindow(QMainWindow):
     def actualize_percentage(self, percentage):
         SetupMainWindow.actualize_percentage(self, percentage)
 
-    def actualize_results_table(self, processed_results, video):
-        SetupMainWindow.actualize_results_table(self, processed_results, video)
+    @Slot(list)
+    def actualize_results_table(self, results):
+        for result in results:
+            SetupMainWindow.actualize_results_table(self, result[0], result[1])
 
     # LEFT MENU BTN IS RELEASED
     # Run function when btn is released
@@ -352,6 +370,10 @@ class MainWindow(QMainWindow):
     def actualize_percentage_v2(self, new_percentage):
         print("new_percentage", new_percentage)
         self.circular_progress.set_value(new_percentage)
+
+    @Slot(Exception)
+    def raise_training_exception(self, exception):
+        self.exception_handler.handle_exception(exception=exception)
 
 
 # SETTINGS WHEN TO START

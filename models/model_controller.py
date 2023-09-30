@@ -1,3 +1,6 @@
+import torch
+import pytorch_lightning as pl
+
 from . segmentation_model import *
 from . model_pytorch import *
 from . segmentation_model_pytorch import *
@@ -6,7 +9,7 @@ from . utils import *
 from . qt_thread import *
 
 from exceptions.exceptions_core import *
-
+import traceback
 
 
 from . import calculate_health_indicators as CHI
@@ -17,29 +20,35 @@ from .data_manager import DataManager
 # Backend controller class
 class ModelController(QObject):
     percentage_actualized = Signal(int)
+    results_obtained = Signal(list)
+    training_exception_raised = Signal(Exception)
 
-    def __init__(self, window):
+    def __init__(self):
         super().__init__()
         self.processing_videos = False
         self.finished_processing = False
+        self.stop_processing = False
         self.thread = None
         self.execution_results = None
         self.model = None
-        # self.upper_segmentation_model = None #Model(upper_model_path)
-        # self.lower_segmentation_model = None #Model(lower_model_path)
-        self.window = window
         self.data_manager = DataManager()
 
     def initiate_models(self):
-        self.model = SegmentationModel("main")
+        try:
+            self.model = SegmentationModel("main")
+        except Exception as e:
+            raise ModelErrorException(ME.INSTANTIATION)
 
     def initialize_thread_processing(self, videos):
         if not self.processing_videos:
-            self.processing_videos = True
-            self.execution_results = None
-            self.thread = FunctionThread(self, videos)
-            self.thread.status_changed.connect(self.handle_status_changed)
-            self.thread.start()
+            try:
+                self.processing_videos = True
+                self.execution_results = None
+                self.thread = FunctionThread(self, videos)
+                self.thread.status_changed.connect(self.handle_status_changed)
+                self.thread.start()
+            except Exception as e:
+                raise(e)
 
     def handle_status_changed(self, status):
         # Handle the status value here
@@ -69,39 +78,54 @@ class ModelController(QObject):
         percentage_per_video = round(100 / amount_of_videos) if 100 / amount_of_videos >= 0.5 else 100 / amount_of_videos
         current_percentage = 0
         previous_percentage = 0
-        status = "Ok"
         results = []
 
-        for video in videos:
-            metrics, current_percentage = self.final_process_video(video, percentage_per_video, current_percentage)
-            health_indicators = CHI.calculateAll(metrics)
-            print(metrics)
-            print(health_indicators)
-            print(type(metrics))
-            print(type(health_indicators))
-            results.append([health_indicators, video])
+        try:
+            for video in videos:
+                metrics, current_percentage = self.final_process_video(video, percentage_per_video, current_percentage)
+                if self.stop_processing:
+                    self.stop_processing = False
+                    self.thread.stop_execution()
+                    self.processing_videos = False
+                    self.execution_results = None
+                    self.percentage_actualized.emit(0)
+                    return "Interrupted"
+                
+                health_indicators = CHI.calculateAll(metrics)
+                health_indicators = replace_negative_values(health_indicators, -1)
+                print(metrics)
+                print(health_indicators)
+                print(type(metrics))
+                print(type(health_indicators))
+                results.append([health_indicators, video])
 
-            # self.window.actualize_results_table(health_indicators, video)
+                # self.window.actualize_results_table(health_indicators, video)
 
-            if percentage_per_video < 0.5 and round(current_percentage) > previous_percentage:
-                # self.window.actualize_percentage(round(current_percentage))
-                self.percentage_actualized.emit(int(round(current_percentage)))
-                previous_percentage = round(current_percentage)
+                if percentage_per_video < 0.5 and round(current_percentage) > previous_percentage:
+                    # self.window.actualize_percentage(round(current_percentage))
+                    self.percentage_actualized.emit(int(round(current_percentage)))
+                    previous_percentage = round(current_percentage)
 
-        self.percentage_actualized.emit(int(100))
-        # self.window.actualize_percentage(100)
+            self.percentage_actualized.emit(int(100))
+        except Exception as e:
+            print(e)
+            model_eror = ModelErrorException(ME.INFERENCE)
+            print(traceback.format_exc())
+            self.training_exception_raised.emit(model_eror)
+            self.thread.stop_execution()
+            self.processing_videos = False
+            self.execution_results = None
+            self.percentage_actualized.emit(0)
+            return "Error"
 
         self.processing_videos = False
         self.finished_processing = True
         self.thread.stop_execution()
 
-        for result in results:
-            # print(len(results))
-            # print(len(result))
-            # print(result)
-            self.window.actualize_results_table(result[0], result[1])
-
         self.execution_results = results
+        self.results_obtained.emit(results)
+
+        print("RESULTS", results)
 
         return results
 
@@ -127,12 +151,15 @@ class ModelController(QObject):
         percentage_per_image = round(percentage_per_video / len(preprocessed_images)) if percentage_per_video / len(preprocessed_images) >= 0.5 else percentage_per_video / len(preprocessed_images)
 
         for image in preprocessed_images:
+            if self.stop_processing:
+                return None, None
+
             mask = self.model.perform_inference(image['image'])
             # Multiply the image by 127
             mask_processed = mask.numpy().squeeze()
-            print(np.shape(mask_processed))
-            result_image = mask_processed * 127
-            cv2.imwrite('output_mask.jpg', result_image)
+            # print(np.shape(mask_processed))
+            # result_image = mask_processed * 127
+            # cv2.imwrite('output_mask.jpg', result_image)
 
             results = self.model.process_results(mask)
 

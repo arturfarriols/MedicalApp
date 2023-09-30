@@ -122,7 +122,9 @@ class SetupMainWindow:
     # Get sender() function when btn is clicked
     # ///////////////////////////////////////////////////////////////
     def setup_btns(self):
-        # print(self)
+        print(self.ui.title_bar.sender())
+        print(self.ui.left_menu.sender())
+        print(self.ui.left_column.sender())
         if self.ui.title_bar.sender() != None:
             return self.ui.title_bar.sender()
         elif self.ui.left_menu.sender() != None:
@@ -529,8 +531,9 @@ class SetupMainWindow:
 
         for i in range(row_count):
             text = self.table_widget.item(i, 0).text()
-            self.results_table.setItem(i, 0, QTableWidgetItem(text))
-
+            video_name_item = QTableWidgetItem(text)
+            video_name_item.setFlags(video_name_item.flags() & ~Qt.ItemIsEditable)
+            self.results_table.setItem(i, 0, video_name_item)
 
         # CIRCULAR PROGRESS 2
         self.circular_progress = PyCircularProgress(
