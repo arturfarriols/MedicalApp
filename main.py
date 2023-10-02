@@ -341,8 +341,9 @@ class MainWindow(QMainWindow):
 
     @Slot(list)
     def actualize_results_table(self, results):
-        for result in results:
-            SetupMainWindow.actualize_results_table(self, result[0], result[1])
+        SetupMainWindow.actualize_results_table(self, results)
+        # for result in results:
+        #     SetupMainWindow.actualize_results_table(self, result[0], result[1])
 
     # LEFT MENU BTN IS RELEASED
     # Run function when btn is released

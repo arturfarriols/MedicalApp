@@ -12,7 +12,8 @@ from exceptions.exceptions_core import *
 import traceback
 
 
-from . import calculate_health_indicators as CHI
+# from . import calculate_health_indicators as CHI
+from .calculate_health_indicators import HealthIndicatorsCalculator as CHI
 from . import health_indicators_utils as HIUtils
 from .data_manager import DataManager
 
@@ -86,6 +87,7 @@ class ModelController(QObject):
                 if self.stop_processing:
                     self.stop_processing = False
                     self.thread.stop_execution()
+                    self.thread = None
                     self.processing_videos = False
                     self.execution_results = None
                     self.percentage_actualized.emit(0)
@@ -113,6 +115,7 @@ class ModelController(QObject):
             print(traceback.format_exc())
             self.training_exception_raised.emit(model_eror)
             self.thread.stop_execution()
+            self.thread = None
             self.processing_videos = False
             self.execution_results = None
             self.percentage_actualized.emit(0)

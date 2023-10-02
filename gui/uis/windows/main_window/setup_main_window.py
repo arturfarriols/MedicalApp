@@ -572,5 +572,55 @@ class SetupMainWindow:
     def actualize_percentage(self, percentage):
         self.circular_progress.set_value(percentage)
 
-    def actualize_results_table(self, processed_results, video):
-        add_result(self, processed_results, video)
+    def actualize_results_table(self, results):
+        written_rows = np.zeros(self.results_table.rowCount())
+        for result in results:
+            name = os.path.basename(result[1].path)
+            row_count = self.results_table.rowCount()
+            column_count = self.results_table.columnCount()   
+
+            for row in range(row_count):
+                file_name = self.results_table.item(row, 0).text()
+                if file_name == name and written_rows[row] == 0:
+                    written_rows[row] = 1
+                    for col in range(1, column_count):
+                        header_item = self.results_table.horizontalHeaderItem(col)
+                        header_text = header_item.text() if header_item else ""
+                        print("header_text", header_text)
+                        item_result = round_if_necessary(result[0][header_text])
+                        item = QTableWidgetItem(str(item_result))
+                        item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                        print(item_result)
+                        item.setTextAlignment(Qt.AlignCenter)
+                        # self.results_table.table_mutex.lock()
+                        self.results_table.setItem(row, col, item)
+
+                    break
+
+
+
+    # def actualize_results_table(self, processed_results, video):
+    #     name = os.path.basename(video.path)
+    #     row_count = self.results_table.rowCount()
+    #     column_count = self.results_table.columnCount()
+
+    #     # results_table_mutex = QMutex()
+        
+    #     for row in range(row_count):
+    #         file_name = self.results_table.item(row, 0).text()
+    #         if file_name == name:
+    #             for col in range(1, column_count):
+    #                 header_item = self.results_table.horizontalHeaderItem(col)
+    #                 header_text = header_item.text() if header_item else ""
+    #                 print("header_text", header_text)
+    #                 result = round_if_necessary(processed_results[header_text])
+    #                 item = QTableWidgetItem(str(result))
+    #                 item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+    #                 print(result)
+    #                 item.setTextAlignment(Qt.AlignCenter)
+    #                 self.results_table.table_mutex.lock()
+    #                 try:
+    #                     self.results_table.setItem(row, col, item)
+    #                 finally:
+    #                     self.results_table.table_mutex.unlock()
+        # add_result(self, processed_results, video)
