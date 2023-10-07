@@ -4,7 +4,7 @@ import cv2
 
 import numpy as np
 
-from . utils import *
+from models.utils import *
 
 import matplotlib.pyplot as plt
 

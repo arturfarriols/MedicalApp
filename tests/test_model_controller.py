@@ -2,8 +2,8 @@ import pytest
 from unittest.mock import patch, MagicMock, call
 
 from models.model_controller import ModelController
-from models.segmentation_model_pytorch import SegmentationModel
-from models.data_manager import DataManager
+from PyOneDark_Qt_Widgets_Modern_GUI.models.model.segmentation_model_pytorch import SegmentationModel
+from PyOneDark_Qt_Widgets_Modern_GUI.data.data_manager import DataManager
 
 from exceptions.exceptions_core import *
 

@@ -6,10 +6,10 @@ from enum import EnumType
 
 from qt_core import *
 
-from . import health_indicators_utils as HIUtils
+# from models import health_indicators_utils as HIUtils
 
 from .export_formats_enum import ExportFormats
-from .video_formats_enum import VideoFormats
+from models.video.video_formats_enum import VideoFormats
 
 from exceptions.exceptions_core import *
 

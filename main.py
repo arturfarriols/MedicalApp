@@ -303,7 +303,7 @@ class MainWindow(QMainWindow):
         if button_id == "cancel_btn":
             print("cancel_btn was clicked")
             # self.model_controller.processing_videos = False
-            if self.model_controller.thread is not None:
+            if self.model_controller.processing_videos:
                 print('STOPPING EXECUTION')
                 self.model_controller.stop_processing = True
                 # self.model_controller.thread.stop_execution() # REFACTOR

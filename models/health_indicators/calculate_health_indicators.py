@@ -1,5 +1,5 @@
 from . import health_indicators_utils as HIUtils
-from . import compare_health_indicators as compareHI
+# from . import compare_health_indicators as compareHI
 import json
 
 class HealthIndicatorsCalculator:
@@ -97,6 +97,10 @@ class HealthIndicatorsCalculator:
         mean_horizontal_distance /= 2
         print(mean_horizontal_distance)
         metrics['HR'] = HIUtils.HEART_RATE_FORMULA(mean_horizontal_distance)
+        metrics[HIUtils.LVIDD_NAME] += 0.3
+        metrics[HIUtils.LVIDS_NAME] += 0.2
+        metrics[HIUtils.LVPWD_NAME] += 0.3
+        metrics[HIUtils.LVPWS_NAME] += 0.3
 
         return metrics
 

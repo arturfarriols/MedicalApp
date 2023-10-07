@@ -1,10 +1,10 @@
 import torch
 import pytorch_lightning as pl
 
-from . segmentation_model import *
-from . model_pytorch import *
-from . segmentation_model_pytorch import *
-from . video import *
+# from . segmentation_model import *
+from .model.model_pytorch import *
+from .model.segmentation_model_pytorch import *
+from .video.video import *
 from . utils import *
 from . qt_thread import *
 
@@ -13,9 +13,9 @@ import traceback
 
 
 # from . import calculate_health_indicators as CHI
-from .calculate_health_indicators import HealthIndicatorsCalculator as CHI
-from . import health_indicators_utils as HIUtils
-from .data_manager import DataManager
+from .health_indicators.calculate_health_indicators import HealthIndicatorsCalculator as CHI
+from .health_indicators import health_indicators_utils as HIUtils
+from data.data_manager import DataManager
 
 
 # Backend controller class
@@ -45,8 +45,9 @@ class ModelController(QObject):
             try:
                 self.processing_videos = True
                 self.execution_results = None
-                self.thread = FunctionThread(self, videos)
-                self.thread.status_changed.connect(self.handle_status_changed)
+                if self.thread is None:
+                    self.thread = FunctionThread(self, videos)
+                    self.thread.status_changed.connect(self.handle_status_changed)
                 self.thread.start()
             except Exception as e:
                 raise(e)
@@ -87,7 +88,6 @@ class ModelController(QObject):
                 if self.stop_processing:
                     self.stop_processing = False
                     self.thread.stop_execution()
-                    self.thread = None
                     self.processing_videos = False
                     self.execution_results = None
                     self.percentage_actualized.emit(0)
@@ -101,8 +101,6 @@ class ModelController(QObject):
                 print(type(health_indicators))
                 results.append([health_indicators, video])
 
-                # self.window.actualize_results_table(health_indicators, video)
-
                 if percentage_per_video < 0.5 and round(current_percentage) > previous_percentage:
                     # self.window.actualize_percentage(round(current_percentage))
                     self.percentage_actualized.emit(int(round(current_percentage)))
@@ -115,7 +113,6 @@ class ModelController(QObject):
             print(traceback.format_exc())
             self.training_exception_raised.emit(model_eror)
             self.thread.stop_execution()
-            self.thread = None
             self.processing_videos = False
             self.execution_results = None
             self.percentage_actualized.emit(0)
@@ -160,9 +157,12 @@ class ModelController(QObject):
             mask = self.model.perform_inference(image['image'])
             # Multiply the image by 127
             mask_processed = mask.numpy().squeeze()
+            print(np.shape(mask_processed))
             # print(np.shape(mask_processed))
             # result_image = mask_processed * 127
-            # cv2.imwrite('output_mask.jpg', result_image)
+            cv2.imwrite('new_output_image.jpg', image['image'])
+            cv2.imwrite('new_output_mask.jpg', mask_processed * 127)
+            cv2.imwrite('new_output_resized_mask.jpg', cv2.resize(mask_processed * 127, (300, 300), interpolation=cv2.INTER_NEAREST))
 
             results = self.model.process_results(mask)
 
