@@ -1,6 +1,6 @@
 # ///////////////////////////////////////////////////////////////
 #
-# BY: WANDERSON M.PIMENTA
+# BY: WANDERSON M.PIMENTA AND ARTUR FARRIOLS RAIMÍ
 # PROJECT MADE WITH: Qt Designer and PySide6
 # V: 1.0.0
 #
@@ -20,6 +20,8 @@ from gui.uis.windows.main_window.functions_main_window import *
 from gui.uis.windows.main_window.logic_functions_main_window import *
 import sys
 import os
+import traceback
+
 
 # IMPORT QT CORE
 # ///////////////////////////////////////////////////////////////
@@ -251,8 +253,9 @@ class MainWindow(QMainWindow):
             try:
                 print("""Button "browse_files_btn" was clicked""")
                 video_path = self.model_controller.import_video()
-                add_row(self, video_path)
-                result = None #open_file_browser(self)
+                if video_path != "":
+                    add_row(self, video_path)
+                    result = None #open_file_browser(self)
             except Exception as e:
                 self.exception_handler.handle_exception(e)
 
@@ -316,6 +319,7 @@ class MainWindow(QMainWindow):
                 self.model_controller.export_results()
             except Exception as e:
                 self.exception_handler.handle_exception(e)
+                traceback.print_exc()
             result = None
             # else: #Modify with exceptions
             #     message_box = PyMessageBox(

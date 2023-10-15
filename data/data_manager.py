@@ -1,6 +1,7 @@
 import sys
 import csv
 import pandas as pd
+import openpyxl
 from enum import EnumType  
 # from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog
 
@@ -49,30 +50,32 @@ class DataManager:
                         writer.writerow(row)
 
             elif file_format == ExportFormats.EXCEL:
-                # df = pd.DataFrame(data[1:], columns=data[0])
-                # df.to_excel(file_name, index=False, engine="openpyxl")
-                df = pd.DataFrame()
+                self._generate_excel_from_dict(data, file_name)
+                # df = pd.DataFrame()
 
-                # Iterate through each element in the data_structure
-                for item in data:
-                    # Add a 'Video name' column containing the video path
-                    item[0]['Video name'] = item[1].get_file_name()
-                    # Append this element as a new row in the DataFrame
-                    df = df.append(item[0], ignore_index=True)
+                # # Iterate through each element in the data_structure
+                # for item in data:
+                #     # Convert the dictionary (item[0]) to a DataFrame
+                #     item_df = pd.DataFrame(item[0])
+                #     # Add a 'Video name' column containing the video path
+                #     item_df['Video name'] = item[1].get_file_name()
+                #     # Append this DataFrame as a new row in the main DataFrame
+                #     df = pd.concat([df, item_df], ignore_index=True)
 
-                # Reorder the columns to have 'Video name' as the first column
-                df = df[['Video name'] + list(df.columns[:-1])]
+                # # Reorder the columns to have 'Video name' as the first column
+                # df = df[['Video name'] + list(df.columns[:-1])]
 
-                # Save the DataFrame to an Excel file
-                df.to_excel(file_name, index=False)
+                # # Save the DataFrame to an Excel file
+                # df.to_excel(file_name, index=False)     
 
     def import_video(self):
         options = QFileDialog.Options()
         video_path, _ = QFileDialog.getOpenFileName(QWidget(), "Open File", "", "All Files (*);;Text Files (*.txt)", options=options)
+        print("VIDEO PATH", video_path)
         video_extension = video_path.split('.')[-1].lower()
         is_valid = self._check_valid_format(video_extension, VideoFormats)
 
-        if not is_valid:
+        if not is_valid and video_path != "":
             video_formats = [member.value for member in VideoFormats]
             video_formats = ", ".join(video_formats)
             raise InvalidDataException(RT.VIDEO.value, video_formats)
@@ -97,3 +100,26 @@ class DataManager:
             print("is_valid List Format", is_valid)
 
         return is_valid
+
+    # Function to generate an Excel file from a dictionary
+    def _generate_excel_from_dict(self, data, file_name):
+        # Create a new Excel workbook
+        workbook = openpyxl.Workbook()
+        
+        # Create a new Excel sheet
+        sheet = workbook.active
+        sheet.title = "Data"
+        
+        # Get the header from the keys of the dictionary
+        header = ["Video name"] + list(data[0][0].keys())
+        
+        # Write the header to the Excel sheet
+        sheet.append(header)
+        
+        # Write the data rows to the Excel sheet
+        for item in data:
+            row = [str(item[1].get_file_name())] + [item[0][key] for key in header[1:]]  # Adding the video.path
+            sheet.append(row)
+
+        # Save the Excel workbook to a file
+        workbook.save(file_name)

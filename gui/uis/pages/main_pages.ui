@@ -195,7 +195,7 @@ QFrame {
        <item>
         <widget class="QStackedWidget" name="page_3_pages">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="no_videos_page">
           <layout class="QHBoxLayout" name="horizontalLayout">

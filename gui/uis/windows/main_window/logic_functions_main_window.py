@@ -1,6 +1,6 @@
 # ///////////////////////////////////////////////////////////////
 #
-# BY: WANDERSON M.PIMENTA
+# BY: WANDERSON M.PIMENTA AND ARTUR FARRIOLS RAIMÍ
 # PROJECT MADE WITH: Qt Designer and PySide6
 # V: 1.0.0
 #
@@ -41,46 +41,46 @@ from models import *
 
 from exceptions.exceptions_core import *
 
-def _check_file_extension_is_valid(file_path):
-    valid_extensions = ['py', 'mp4', 'avi', 'mov', 'mkv', 'wmv'] #Remove .py
+# def _check_file_extension_is_valid(file_path):
+#     valid_extensions = ['py', 'mp4', 'avi', 'mov', 'mkv', 'wmv'] #Remove .py
     
-    file_extension = file_path.split('.')[-1].lower()
-    print(file_extension)
+#     file_extension = file_path.split('.')[-1].lower()
+#     print(file_extension)
     
-    if file_extension in valid_extensions:
-        return True
-    else:
-        return False
+#     if file_extension in valid_extensions:
+#         return True
+#     else:
+#         return False
 
-def open_file_browser(window):
-    options = QFileDialog.Options()
-    file_path, _ = QFileDialog.getOpenFileName(window, "Open File", "", "All Files (*);;Text Files (*.txt)", options=options)
+# def open_file_browser(window):
+#     options = QFileDialog.Options()
+#     file_path, _ = QFileDialog.getOpenFileName(window, "Open File", "", "All Files (*);;Text Files (*.txt)", options=options)
     
-    if file_path:
-        print("Selected file:", file_path)
+#     if file_path:
+#         print("Selected file:", file_path)
     
-        if not _check_file_extension_is_valid(file_path):
-            # File format is not valid
+#         if not _check_file_extension_is_valid(file_path):
+#             # File format is not valid
 
-            # CREATE CUSTOM BUTTON 2
-            # message_box = PyMessageBox(
-            #     text = "The selected file format is not valid.",
-            #     title = "Invalid File Format",
-            #     icon = QMessageBox.Warning, 
-            #     color = "#333333",
-            #     radius = 0,
-            #     msg_bg_color = "#F0F0F0",
-            #     btn_bg_color = "#F8F8F8",
-            #     btn_bg_color_hover = "#E8E8E8",
-            #     btn_bg_color_pressed = "#D0D0D0",
-            #     id = "warning pop up"
-            # )
+#             # CREATE CUSTOM BUTTON 2
+#             # message_box = PyMessageBox(
+#             #     text = "The selected file format is not valid.",
+#             #     title = "Invalid File Format",
+#             #     icon = QMessageBox.Warning, 
+#             #     color = "#333333",
+#             #     radius = 0,
+#             #     msg_bg_color = "#F0F0F0",
+#             #     btn_bg_color = "#F8F8F8",
+#             #     btn_bg_color_hover = "#E8E8E8",
+#             #     btn_bg_color_pressed = "#D0D0D0",
+#             #     id = "warning pop up"
+#             # )
 
-            # message_box.exec_()
-            return None
-        else:
-            add_row(window, file_path)
-            return file_path
+#             # message_box.exec_()
+#             return None
+#         else:
+#             add_row(window, file_path)
+#             return file_path
 
 def _create_table_widget(widget_content, widget_type):
     # Create a centered widget for the table cell
@@ -170,10 +170,10 @@ def add_row(window, file_path):
     date_item = QTableWidgetItem(str(get_local_date()))
     date_item.setFlags(date_item.flags() & ~Qt.ItemIsEditable)
     window.table_widget.setItem(row_number, 0, file_name_item) 
-    window.table_widget.setItem(row_number, 1, eta_item)
-    window.table_widget.setItem(row_number, 2, date_item)  
-    window.table_widget.setCellWidget(row_number, 3, image_widget)
-    window.table_widget.setCellWidget(row_number, 4, btn_widget) 
+    # window.table_widget.setItem(row_number, 1, eta_item)
+    window.table_widget.setItem(row_number, 1, date_item)  
+    window.table_widget.setCellWidget(row_number, 2, image_widget)
+    window.table_widget.setCellWidget(row_number, 3, btn_widget) 
 
     window.table_widget.setRowHeight(row_number, cell_height)
     window.table_widget.add_item(video)
@@ -186,7 +186,8 @@ def delete_row(btn_table, table_widget):
     if row is not None:
         table_widget.remove_item(row)
         for i in range(row + 1, row_number):
-            table_widget.cellWidget(i, 4).findChildren(PyTablePushButton)[0].set_row(i - 1)
+            print(i)
+            table_widget.cellWidget(i, 3).findChildren(PyTablePushButton)[0].set_row(i - 1)
         table_widget.removeRow(row)
 
 def round_if_necessary(value):
@@ -238,42 +239,10 @@ def display_cropped_frames(window):
     if number_of_rows == 0:
         # CREATE CUSTOM BUTTON 2
         raise ResourceNotFoundException(RT.VIDEO)
-        # message_box = PyMessageBox(
-        #     text = "There is no video to analyze.",
-        #     title = "Any video chosen",
-        #     icon = QMessageBox.Warning, 
-        #     color = "#333333",
-        #     radius = 0,
-        #     msg_bg_color = "#F0F0F0",
-        #     btn_bg_color = "#F8F8F8",
-        #     btn_bg_color_hover = "#E8E8E8",
-        #     btn_bg_color_pressed = "#D0D0D0",
-        #     id = "warning pop up"
-        # )
-
-        # message_box.exec_()
-        # return "There is no video to analyze."
     points = {}
     for video in window.table_widget.items:
         status, frames = video.get_cropped_frames()
-        # print("STATUS", status)
-        # status = "NOK"
-        # print("STATUS", status)
         if status != "Ok":
-        #     message_box = PyMessageBox(
-        #         text = status,
-        #         title = "Error loading the video",
-        #         icon = QMessageBox.Warning, 
-        #         color = "#333333",
-        #         radius = 0,
-        #         msg_bg_color = "#F0F0F0",
-        #         btn_bg_color = "#F8F8F8",
-        #         btn_bg_color_hover = "#E8E8E8",
-        #         btn_bg_color_pressed = "#D0D0D0",
-        #         id = "warning pop up"
-        #     )
-        #     message_box.exec_()
-            # return status
             raise VideoErrorException(video_name=video.get_file_name())
         else:
             try:
@@ -295,21 +264,17 @@ def display_cropped_frames(window):
     # top_btn_settings.set_active(False)
     window.ui.left_menu.select_only_one_tab(window.btn_3.objectName())
 
-    # window.ui.left_menu.select_only_one_tab("btn_page_3")
     btn_page_3 = window.ui.left_menu.findChildren(QPushButton, "btn_page_3")
     btn_page_2 = window.ui.left_menu.findChildren(QPushButton, "btn_page_2")
     btn_page_2[0].set_active(False)
     btn_page_3[0].set_active(True)
-    # self.ui.left_menu.select_only_one(btn.objectName()) 
-    # window.btn_3.set_active(True)
-    # window.show()
     return "Ok"
 
-@Slot(int)    
-def actualize_percentage(window, new_percentage):
-    print("new_percentage", new_percentage)
-    window.circular_progress.set_value(new_percentage)
-    # self.show()                
+# @Slot(int)    
+# def actualize_percentage(window, new_percentage):
+#     print("new_percentage", new_percentage)
+#     window.circular_progress.set_value(new_percentage)
+#     # self.show()                
         
 
 def open_analysis_dialog(frames):

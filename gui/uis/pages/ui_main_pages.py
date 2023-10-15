@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_pagesDXBToV.ui'
+## Form generated from reading UI file 'main_pagesCmtNFj.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.3
 ##
@@ -167,7 +167,7 @@ class Ui_MainPages(object):
         self.retranslateUi(MainPages)
 
         self.pages.setCurrentIndex(2)
-        self.page_3_pages.setCurrentIndex(1)
+        self.page_3_pages.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainPages)

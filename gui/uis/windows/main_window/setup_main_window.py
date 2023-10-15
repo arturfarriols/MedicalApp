@@ -1,6 +1,6 @@
 # ///////////////////////////////////////////////////////////////
 #
-# BY: WANDERSON M.PIMENTA
+# BY: WANDERSON M.PIMENTA  AND ARTUR FARRIOLS RAIMÍ
 # PROJECT MADE WITH: Qt Designer and PySide6
 # V: 1.0.0
 #
@@ -276,7 +276,7 @@ class SetupMainWindow:
             scroll_bar_btn_color = self.themes["app_color"]["dark_four"],
             context_color = self.themes["app_color"]["context_color"]
         )
-        self.table_widget.setColumnCount(5)
+        self.table_widget.setColumnCount(4)
         # self.table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.table_widget.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -286,28 +286,28 @@ class SetupMainWindow:
         self.column_1.setTextAlignment(Qt.AlignCenter)
         self.column_1.setText("FILE NAME")
 
+        # self.column_2 = QTableWidgetItem()
+        # self.column_2.setTextAlignment(Qt.AlignCenter)
+        # self.column_2.setText("ESTIMATED PROCESSING TIME")
+
         self.column_2 = QTableWidgetItem()
         self.column_2.setTextAlignment(Qt.AlignCenter)
-        self.column_2.setText("ESTIMATED PROCESSING TIME")
+        self.column_2.setText("DATE")
 
         self.column_3 = QTableWidgetItem()
         self.column_3.setTextAlignment(Qt.AlignCenter)
-        self.column_3.setText("DATE")
+        self.column_3.setText("PREVIEW")
 
         self.column_4 = QTableWidgetItem()
         self.column_4.setTextAlignment(Qt.AlignCenter)
-        self.column_4.setText("PREVIEW")
-
-        self.column_5 = QTableWidgetItem()
-        self.column_5.setTextAlignment(Qt.AlignCenter)
-        self.column_5.setText("DELETE")
+        self.column_4.setText("DELETE")
 
         # Set column
         self.table_widget.setHorizontalHeaderItem(0, self.column_1)
+        # self.table_widget.setHorizontalHeaderItem(1, self.column_2)
         self.table_widget.setHorizontalHeaderItem(1, self.column_2)
         self.table_widget.setHorizontalHeaderItem(2, self.column_3)
         self.table_widget.setHorizontalHeaderItem(3, self.column_4)
-        self.table_widget.setHorizontalHeaderItem(4, self.column_5)
 
         # Set column widths
         # total_width = self.table_widget.width()
@@ -318,11 +318,12 @@ class SetupMainWindow:
         # Set width policies
         self.table_widget.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # Stretch column width
         self.table_widget.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)  # Stretch column width
-        self.table_widget.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)  # Stretch column width
+        self.table_widget.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)  # Stretch column width
+        self.table_widget.setColumnWidth(2, 150)
         self.table_widget.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)  # Fix column width
         self.table_widget.setColumnWidth(3, 150)
-        self.table_widget.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)  # Adjust width to contents
-        self.table_widget.setColumnWidth(4, 150)
+        # self.table_widget.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)  # Adjust width to contents
+        # self.table_widget.setColumnWidth(4, 150)
 
         # CREATE CUSTOM BUTTON 2
         self.btn_3 = PyPushButton(
@@ -360,11 +361,14 @@ class SetupMainWindow:
         self.ui.load_pages.table_layout.addWidget(self.table_widget)
         self.ui.load_pages.analysis_btn_layout.addWidget(self.btn_3, Qt.AlignCenter, Qt.AlignCenter)
         self.ui.load_pages.no_videos_layout.addWidget(self.label_1, Qt.AlignCenter, Qt.AlignCenter)
+        
 
         # self.logo = QSvgWidget(Functions.set_svg_image("logo_home.svg"))
         self.logo = QSvgWidget(Functions.set_svg_image("main_logo.svg"))
 
         self.ui.load_pages.page_1_layout.addWidget(self.logo, Qt.AlignCenter, Qt.AlignCenter)
+
+        
 
         # ///////////////////////////////////////////////////////////////
         # END - EXAMPLE CUSTOM WIDGETS
@@ -421,7 +425,7 @@ class SetupMainWindow:
             scroll_bar_btn_color = self.themes["app_color"]["dark_four"],
             context_color = self.themes["app_color"]["context_color"]
         )
-        self.results_table.setColumnCount(14)
+        self.results_table.setColumnCount(15)
         # self.table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.results_table.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.results_table.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -471,21 +475,21 @@ class SetupMainWindow:
         self.column_16.setTextAlignment(Qt.AlignCenter)
         self.column_16.setText("EF")
 
-        # self.column_17 = QTableWidgetItem()
-        # self.column_17.setTextAlignment(Qt.AlignCenter)
-        # self.column_17.setText("LV")
-
         self.column_17 = QTableWidgetItem()
         self.column_17.setTextAlignment(Qt.AlignCenter)
-        self.column_17.setText("SV")
+        self.column_17.setText("LV Mass")
 
         self.column_18 = QTableWidgetItem()
         self.column_18.setTextAlignment(Qt.AlignCenter)
-        self.column_18.setText("CO")
+        self.column_18.setText("SV")
 
         self.column_19 = QTableWidgetItem()
         self.column_19.setTextAlignment(Qt.AlignCenter)
-        self.column_19.setText("HR")
+        self.column_19.setText("CO")
+
+        self.column_20 = QTableWidgetItem()
+        self.column_20.setTextAlignment(Qt.AlignCenter)
+        self.column_20.setText("HR")
 
         # Set column
         self.results_table.setHorizontalHeaderItem(0, self.column_6)
@@ -502,6 +506,7 @@ class SetupMainWindow:
         self.results_table.setHorizontalHeaderItem(11, self.column_17)
         self.results_table.setHorizontalHeaderItem(12, self.column_18)
         self.results_table.setHorizontalHeaderItem(13, self.column_19)
+        self.results_table.setHorizontalHeaderItem(14, self.column_20)
 
         # Set the width of a specific column
         # target_column = 0
@@ -526,6 +531,7 @@ class SetupMainWindow:
         self.results_table.horizontalHeader().setSectionResizeMode(11, QHeaderView.ResizeMode.Stretch)
         self.results_table.horizontalHeader().setSectionResizeMode(12, QHeaderView.ResizeMode.Stretch)
         self.results_table.horizontalHeader().setSectionResizeMode(13, QHeaderView.ResizeMode.Stretch)
+        self.results_table.horizontalHeader().setSectionResizeMode(14, QHeaderView.ResizeMode.Stretch)
 
         self.results_table.setRowCount(row_count)
 
@@ -596,31 +602,3 @@ class SetupMainWindow:
                         self.results_table.setItem(row, col, item)
 
                     break
-
-
-
-    # def actualize_results_table(self, processed_results, video):
-    #     name = os.path.basename(video.path)
-    #     row_count = self.results_table.rowCount()
-    #     column_count = self.results_table.columnCount()
-
-    #     # results_table_mutex = QMutex()
-        
-    #     for row in range(row_count):
-    #         file_name = self.results_table.item(row, 0).text()
-    #         if file_name == name:
-    #             for col in range(1, column_count):
-    #                 header_item = self.results_table.horizontalHeaderItem(col)
-    #                 header_text = header_item.text() if header_item else ""
-    #                 print("header_text", header_text)
-    #                 result = round_if_necessary(processed_results[header_text])
-    #                 item = QTableWidgetItem(str(result))
-    #                 item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-    #                 print(result)
-    #                 item.setTextAlignment(Qt.AlignCenter)
-    #                 self.results_table.table_mutex.lock()
-    #                 try:
-    #                     self.results_table.setItem(row, col, item)
-    #                 finally:
-    #                     self.results_table.table_mutex.unlock()
-        # add_result(self, processed_results, video)

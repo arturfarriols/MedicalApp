@@ -97,10 +97,10 @@ class HealthIndicatorsCalculator:
         mean_horizontal_distance /= 2
         print(mean_horizontal_distance)
         metrics['HR'] = HIUtils.HEART_RATE_FORMULA(mean_horizontal_distance)
-        metrics[HIUtils.LVIDD_NAME] += 0.3
-        metrics[HIUtils.LVIDS_NAME] += 0.2
-        metrics[HIUtils.LVPWD_NAME] += 0.3
-        metrics[HIUtils.LVPWS_NAME] += 0.3
+        # metrics[HIUtils.LVIDD_NAME] += 0.2
+        # metrics[HIUtils.LVIDS_NAME] += 0.2
+        metrics[HIUtils.LVPWD_NAME] += 0.1
+        metrics[HIUtils.LVPWS_NAME] += 0.2
 
         return metrics
 
@@ -112,6 +112,7 @@ class HealthIndicatorsCalculator:
         LVEDV_value = HealthIndicatorsCalculator.calculateLVEDV(metrics[HIUtils.LVIDD_NAME])  # LVIDd
         FS_value = HealthIndicatorsCalculator.calculateFS(metrics[HIUtils.LVIDD_NAME], metrics[HIUtils.LVIDS_NAME])  # LVIDd, LVIDs
         EF_value = HealthIndicatorsCalculator.calculateEF(LVEDV_value, LVESV_value)
+        LV_mass_value = HealthIndicatorsCalculator.calculateLV_mass(metrics[HIUtils.LVIDD_NAME], metrics[HIUtils.IVSD_NAME], metrics[HIUtils.LVPWD_NAME] )
         SV_value = HealthIndicatorsCalculator.calculateStroke_volume(LVEDV_value, LVESV_value)
         CO_value = HealthIndicatorsCalculator.calculateCardiac_output(SV_value, metrics[HIUtils.HR_NAME])  # HR
         RWT_value = HealthIndicatorsCalculator.calculateRelative_wall_thickness(metrics[HIUtils.LVPWD_NAME], metrics[HIUtils.IVSD_NAME], metrics[HIUtils.LVIDD_NAME])  # LVPWd, IVSd, LVIDd
@@ -120,7 +121,7 @@ class HealthIndicatorsCalculator:
                          'LVEDV': LVEDV_value,
                          'FS': FS_value,
                          'EF': EF_value,
-                         #    'LV_MASS': LV_mass_value,
+                         'LV Mass': LV_mass_value,
                          'SV': SV_value,
                          'CO': CO_value,
                          'RWT': RWT_value}

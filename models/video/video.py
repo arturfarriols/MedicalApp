@@ -45,6 +45,7 @@ class Video:
             # Read the first frame from the video
             else:
                 ret, frame = video_capture.read()
+                print("FRAME SHAPE", np.shape(frame))
 
                 # Check if a frame was successfully read
                 if not ret:
@@ -77,6 +78,9 @@ class Video:
         status = "Video does not exist"
         cropped_frames = []
 
+        y, y2, x, x2 = self.obtain_extreme_points()[0]
+        print("EXTREME POINTS", x, y, x2, y2)
+
         if self.does_path_exist():
             status = "Ok"
             # Open the video file
@@ -88,9 +92,8 @@ class Video:
 
             # Loop through all frames in the video
             while success:
-                x, y, crop_w, crop_h = 52, 62, 525, 362
                 # Crop the frame using the provided crop area coordinates
-                cropped_frame = frame[62:362, 52:525]
+                cropped_frame = frame[y:y2, x:x2]
 
                 # Append the cropped frame to the list
                 cropped_frames.append(cropped_frame)

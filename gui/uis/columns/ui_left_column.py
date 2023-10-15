@@ -100,6 +100,8 @@ class Ui_LeftColumn(object):
         LeftColumn.setWindowTitle(QCoreApplication.translate("LeftColumn", u"Form", None))
         self.pushButton.setText(QCoreApplication.translate("LeftColumn", u"PushButton", None))
         self.label_1.setText(QCoreApplication.translate("LeftColumn", u"Menu 1 - Left Menu", None))
-        self.label_2.setText(QCoreApplication.translate("LeftColumn", u"Menu 2 - Left Menu", None))
+        # self.label_2.setText(QCoreApplication.translate("LeftColumn", u"Menu 2 - Left Menu", None))
+        self.label_2.setText(QCoreApplication.translate("LeftColumn", u"""Application to analyze 
+long axis ecographies""", None))
     # retranslateUi
 
